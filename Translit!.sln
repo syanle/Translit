@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translit!", "src\Translit!.csproj", "{461FD9B2-42F4-4517-A0F6-1E99DC43018A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{63BDA59B-964F-4AF6-A914-CAE5CC1F4ABB}"
+	ProjectSection(SolutionItems) = preProject
+		Strings.cs = Strings.cs
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Translit", "Translit\Translit.vdproj", "{5A8FE13B-27D1-4B8B-9706-54E3A4E339C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{461FD9B2-42F4-4517-A0F6-1E99DC43018A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{461FD9B2-42F4-4517-A0F6-1E99DC43018A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{461FD9B2-42F4-4517-A0F6-1E99DC43018A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{461FD9B2-42F4-4517-A0F6-1E99DC43018A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A8FE13B-27D1-4B8B-9706-54E3A4E339C8}.Debug|Any CPU.ActiveCfg = Debug
+		{5A8FE13B-27D1-4B8B-9706-54E3A4E339C8}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8840835B-8423-4E9E-B9C2-63236F77F948}
+	EndGlobalSection
+EndGlobal
