@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4D0F3F6ABFEF3EEFC2D3BBBB93557651"
+        "MsmKey" = "8:_72C22002DC493DACD45E210C61ED557D"
         "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,6 +39,30 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9CBB5644228EDF353EBD060DEB8BC658"
+        "OwnerKey" = "8:_72C22002DC493DACD45E210C61ED557D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9CBB5644228EDF353EBD060DEB8BC658"
+        "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B08BF1545C0D9DB9409959BFE49F6D70"
+        "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
+        "OwnerKey" = "8:_9CBB5644228EDF353EBD060DEB8BC658"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
         "MsmSig" = "8:_UNDEFINED"
@@ -46,7 +70,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4D0F3F6ABFEF3EEFC2D3BBBB93557651"
+        "OwnerKey" = "8:_72C22002DC493DACD45E210C61ED557D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9CBB5644228EDF353EBD060DEB8BC658"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B08BF1545C0D9DB9409959BFE49F6D70"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -150,20 +186,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4D0F3F6ABFEF3EEFC2D3BBBB93557651"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_72C22002DC493DACD45E210C61ED557D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4D0F3F6ABFEF3EEFC2D3BBBB93557651"
+                    "_72C22002DC493DACD45E210C61ED557D"
                     {
-                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Name" = "8:AxInterop.WMPLib.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "SourcePath" = "8:AxInterop.WMPLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
@@ -232,6 +268,88 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9CBB5644228EDF353EBD060DEB8BC658"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9CBB5644228EDF353EBD060DEB8BC658"
+                    {
+                    "Name" = "8:Interop.WMPLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Interop.WMPLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B08BF1545C0D9DB9409959BFE49F6D70"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B08BF1545C0D9DB9409959BFE49F6D70"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
+            {
+            "SourcePath" = "8:wmp.dll"
+            "TargetName" = "8:wmp.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -287,25 +405,25 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Translit! v1.1.0"
-        "ProductCode" = "8:{C2C1343D-F4C7-4B45-8AB2-FF03828B9F47}"
-        "PackageCode" = "8:{5536E9FE-362D-4424-88DC-0F0DAF5D6443}"
+        "ProductName" = "8:Translit! 18.11"
+        "ProductCode" = "8:{FA47D68D-9C22-4BA2-9EF2-53E498AF0755}"
+        "PackageCode" = "8:{E26D9AE9-3410-44D7-B1FB-1B4B639F487C}"
         "UpgradeCode" = "8:{3FD929B0-D479-4D25-9B88-DADE914961D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.0"
+        "ProductVersion" = "8:18.11"
         "Manufacturer" = "8:Translit"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.translit.tk"
-        "Title" = "8:Translit"
+        "Title" = "8:Translit!"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Xue"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Copy and Boom"
-        "ARPURLINFOABOUT" = "8:http://translit.tk"
+        "ARPURLINFOABOUT" = "8:http://www.translit.tk"
         "ARPPRODUCTICON" = "8:_9BAF28D64F3549339FE2EAB13B218376"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -413,7 +531,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:Translit! (v1.1)"
+            "Description" = "8:Translit! (v18.11)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -427,7 +545,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:"
+            "Description" = "8:Translit! (v18.11)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -838,7 +956,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_278B1C69D39F436CB7DEE39776566C8F"
             {
-            "SourcePath" = "8:..\\pdfTranslater\\obj\\Release\\Translit!.exe"
+            "SourcePath" = "8:..\\src\\obj\\Release\\Translit!.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"

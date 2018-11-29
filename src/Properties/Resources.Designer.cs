@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace translit.Properties {
+namespace pdfTranslater.Properties {
     using System;
     
     
@@ -61,11 +61,12 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&amp;key=trnsl.1.1.20180310T213839Z.5346cde1e4314c12.5f0210740a735e6e86d15e0f521b17a48d81edb9.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static string getLangsUrl {
+        internal static System.Drawing.Bitmap rsz_multi {
             get {
-                return ResourceManager.GetString("getLangsUrl", resourceCulture);
+                object obj = ResourceManager.GetObject("rsz_multi", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -75,6 +76,24 @@ namespace translit.Properties {
         internal static string Secret {
             get {
                 return ResourceManager.GetString("Secret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/microsoftGetSpeakFile?from=translateweb&amp;spokenDialect=en&amp;text=.
+        /// </summary>
+        internal static string SogouAudioUrl {
+            get {
+                return ResourceManager.GetString("SogouAudioUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to from=auto&amp;to=zh-CHS&amp;client=pc&amp;fr=browser_pc&amp;useDetect=on&amp;useDetectResult=on&amp;needQc=1&amp;pid=sogou-dict-vr&amp;oxford=on&amp;isReturnSugg=on&amp;uuid=.
+        /// </summary>
+        internal static string SogouPostDataPrefix {
+            get {
+                return ResourceManager.GetString("SogouPostDataPrefix", resourceCulture);
             }
         }
         
@@ -106,7 +125,7 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;version=1.1.0.
+        ///   Looks up a localized string similar to &amp;version=18.11.
         /// </summary>
         internal static string TranslitCurrentVersion {
             get {

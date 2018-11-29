@@ -20,7 +20,7 @@ namespace translit
             {
                 if (!mutex.WaitOne(0, false))
                 {
-                    MessageBox.Show("Instance already running!", "Caption");
+                    MessageBox.Show("Instance already running!", "Translit!");
                     return;
                 }
                 Application.EnableVisualStyles();

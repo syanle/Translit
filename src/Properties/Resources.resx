@@ -117,14 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="getLangsUrl" xml:space="preserve">
-    <value>https://translate.yandex.net/api/v1.5/tr.json/getLangs?ui=en&amp;key=trnsl.1.1.20180310T213839Z.5346cde1e4314c12.5f0210740a735e6e86d15e0f521b17a48d81edb9</value>
-  </data>
-  <data name="SogouTranslaterUrl" xml:space="preserve">
-    <value>https://fanyi.sogou.com/reventondc/translate</value>
-  </data>
-  <data name="TranslitAboutUrl" xml:space="preserve">
-    <value>http://www.translit.tk</value>
+  <data name="SogouAudioUrl" xml:space="preserve">
+    <value>https://fanyi.sogou.com/reventondc/microsoftGetSpeakFile?from=translateweb&amp;spokenDialect=en&amp;text=</value>
   </data>
   <data name="TranslitCheckUpdateUrl" xml:space="preserve">
     <value>http://www.translit.tk/update/check?userid=</value>
@@ -132,7 +126,20 @@
   <data name="Secret" xml:space="preserve">
     <value>translit!</value>
   </data>
+  <data name="TranslitAboutUrl" xml:space="preserve">
+    <value>http://www.translit.tk</value>
+  </data>
   <data name="TranslitCurrentVersion" xml:space="preserve">
-    <value>&amp;version=1.1.0</value>
+    <value>&amp;version=18.11</value>
+  </data>
+  <data name="SogouTranslaterUrl" xml:space="preserve">
+    <value>https://fanyi.sogou.com/reventondc/translate</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rsz_multi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rsz_multi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SogouPostDataPrefix" xml:space="preserve">
+    <value>from=auto&amp;to=zh-CHS&amp;client=pc&amp;fr=browser_pc&amp;useDetect=on&amp;useDetectResult=on&amp;needQc=1&amp;pid=sogou-dict-vr&amp;oxford=on&amp;isReturnSugg=on&amp;uuid=</value>
   </data>
 </root>
