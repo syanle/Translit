@@ -22,7 +22,7 @@ namespace pdfTranslater.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace pdfTranslater.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("pdfTranslater.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace pdfTranslater.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,286 @@ namespace pdfTranslater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to html {
+        /// color:#333;
+        /// background:#fff;
+        /// -ms-text-size-adjust:100%;
+        /// -webkit-text-size-adjust:100%;
+        /// font-family:arial,pingfang sc,stheiti,Microsoft YaHei,sans-serif
+        ///}
+        ///body,dd,dl,form,h1,h2,h3,h4,h5,h6,ol,p,td,th,ul {
+        /// margin:0;
+        /// padding:0
+        ///}
+        ///button,input,select,textarea {
+        /// font-size:100%;
+        /// margin:0;
+        /// vertical-align:baseline;
+        /// *vertical-align:middle
+        ///}
+        ///input::-ms-clear,input::-ms-reveal {
+        /// display:none
+        ///}
+        ///textarea {
+        /// overflow:auto
+        ///}
+        ///table {
+        /// border-collapse:collapse;
+        /// border-spacing:0
+        ///} [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string blue_stylesheet {
+            get {
+                return ResourceManager.GetString("blue_stylesheet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon hiddenNotifyIcon {
+            get {
+                object obj = ResourceManager.GetObject("hiddenNotifyIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rsz_multi {
+        public static System.Drawing.Bitmap mini_close {
             get {
-                object obj = ResourceManager.GetObject("rsz_multi", resourceCulture);
+                object obj = ResourceManager.GetObject("mini_close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_close_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_close_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_down {
+            get {
+                object obj = ResourceManager.GetObject("mini_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_down_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_down_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_edit {
+            get {
+                object obj = ResourceManager.GetObject("mini_edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_edit_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_edit_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_a {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_a", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_b {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_c {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_c", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_y {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_y", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_ok_z {
+            get {
+                object obj = ResourceManager.GetObject("mini_ok_z", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_query {
+            get {
+                object obj = ResourceManager.GetObject("mini_query", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_query_a {
+            get {
+                object obj = ResourceManager.GetObject("mini_query_a", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_query_b {
+            get {
+                object obj = ResourceManager.GetObject("mini_query_b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_query_c {
+            get {
+                object obj = ResourceManager.GetObject("mini_query_c", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_query_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_query_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_sprig {
+            get {
+                object obj = ResourceManager.GetObject("mini_sprig", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_sprig_down {
+            get {
+                object obj = ResourceManager.GetObject("mini_sprig_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_sprig_down_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_sprig_down_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_sprig_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_sprig_hover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_up {
+            get {
+                object obj = ResourceManager.GetObject("mini_up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap mini_up_hover {
+            get {
+                object obj = ResourceManager.GetObject("mini_up_hover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,7 +348,7 @@ namespace pdfTranslater.Properties {
         /// <summary>
         ///   Looks up a localized string similar to translit!.
         /// </summary>
-        internal static string Secret {
+        public static string Secret {
             get {
                 return ResourceManager.GetString("Secret", resourceCulture);
             }
@@ -82,7 +357,7 @@ namespace pdfTranslater.Properties {
         /// <summary>
         ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/microsoftGetSpeakFile?from=translateweb&amp;spokenDialect=en&amp;text=.
         /// </summary>
-        internal static string SogouAudioUrl {
+        public static string SogouAudioUrl {
             get {
                 return ResourceManager.GetString("SogouAudioUrl", resourceCulture);
             }
@@ -91,25 +366,44 @@ namespace pdfTranslater.Properties {
         /// <summary>
         ///   Looks up a localized string similar to from=auto&amp;to=zh-CHS&amp;client=pc&amp;fr=browser_pc&amp;useDetect=on&amp;useDetectResult=on&amp;needQc=1&amp;pid=sogou-dict-vr&amp;oxford=on&amp;isReturnSugg=on&amp;uuid=.
         /// </summary>
-        internal static string SogouPostDataPrefix {
+        public static string SogouPostDataPrefix {
             get {
                 return ResourceManager.GetString("SogouPostDataPrefix", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/translate.
+        ///   Looks up a localized string similar to http://www.translit.tk/update/salt?userid=.
         /// </summary>
-        internal static string SogouTranslaterUrl {
+        public static string SogouSaltUrl {
+            get {
+                return ResourceManager.GetString("SogouSaltUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/translateV1.
+        /// </summary>
+        public static string SogouTranslaterUrl {
             get {
                 return ResourceManager.GetString("SogouTranslaterUrl", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap translit_text_Logo {
+            get {
+                object obj = ResourceManager.GetObject("translit_text_Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://www.translit.tk.
         /// </summary>
-        internal static string TranslitAboutUrl {
+        public static string TranslitAboutUrl {
             get {
                 return ResourceManager.GetString("TranslitAboutUrl", resourceCulture);
             }
@@ -118,18 +412,27 @@ namespace pdfTranslater.Properties {
         /// <summary>
         ///   Looks up a localized string similar to http://www.translit.tk/update/check?userid=.
         /// </summary>
-        internal static string TranslitCheckUpdateUrl {
+        public static string TranslitCheckUpdateUrl {
             get {
                 return ResourceManager.GetString("TranslitCheckUpdateUrl", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;version=18.11.
+        ///   Looks up a localized string similar to &amp;version=18.12.
         /// </summary>
-        internal static string TranslitCurrentVersion {
+        public static string TranslitCurrentVersion {
             get {
                 return ResourceManager.GetString("TranslitCurrentVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://www.translit.tk/update/message?userid=.
+        /// </summary>
+        public static string TranslitMessageUrl {
+            get {
+                return ResourceManager.GetString("TranslitMessageUrl", resourceCulture);
             }
         }
     }

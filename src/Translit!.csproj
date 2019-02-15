@@ -28,6 +28,8 @@
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -104,14 +106,13 @@
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TransForm.resx">
-      <DependentUpon>TransForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TransForm.resx">
+      <DependentUpon>TransForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -142,7 +143,35 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Martz90-Circle-Addon2-Google-translate.ico" />
-    <None Include="Resources\rsz_multi.png" />
+    <None Include="Resources\blue_stylesheet.css" />
+    <None Include="Resources\mini_query_c.png" />
+    <None Include="Resources\mini_query_b.png" />
+    <None Include="Resources\mini_query_a.png" />
+    <None Include="Resources\mini_ok_y.png" />
+    <None Include="Resources\mini_ok_z.png" />
+    <None Include="Resources\mini_ok_c.png" />
+    <None Include="Resources\mini_ok_b.png" />
+    <None Include="Resources\mini_ok_a.png" />
+    <None Include="Resources\mini_up_hover.png" />
+    <None Include="Resources\mini_up.png" />
+    <None Include="Resources\mini_down_hover.png" />
+    <None Include="Resources\mini_down.png" />
+    <None Include="Resources\mini_close_hover.png" />
+    <None Include="Resources\mini_close.png" />
+    <None Include="Resources\mini-down-hover.png" />
+    <None Include="Resources\mini-down.png" />
+    <None Include="Resources\mini_query_hover.png" />
+    <None Include="Resources\mini_query.png" />
+    <None Include="Resources\mini_ok_hover.png" />
+    <None Include="Resources\mini_ok.png" />
+    <None Include="Resources\mini_edit_hover.png" />
+    <None Include="Resources\mini_edit.png" />
+    <None Include="Resources\translit_text_Logo.png" />
+    <None Include="Resources\hiddenNotifyIcon.ico" />
+    <None Include="Resources\mini_sprig_hover.png" />
+    <None Include="Resources\mini_sprig_down_hover.png" />
+    <None Include="Resources\mini_sprig_down.png" />
+    <None Include="Resources\mini_sprig.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="AxWMPLib">
@@ -159,6 +188,15 @@
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="MSHTML">
+      <Guid>{3050F1C5-98B5-11CF-BB82-00AA00BDCE0B}</Guid>
+      <VersionMajor>4</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>

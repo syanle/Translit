@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics;
@@ -10,14 +11,18 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using pdfTranslater.Properties;
+using mshtml;
 
 namespace translit
 {
     public partial class TransForm : Form
     {
+
 
         #region fields
 
@@ -25,13 +30,6 @@ namespace translit
 
         string s = string.Format(Resources.SogouTranslaterUrl, 0);
         Boolean alwaysOnTop = false;
-
-        private System.Windows.Forms.ContextMenu contextMenu1;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItem2;
-        private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.MenuItem menuItem4;
-        private System.Windows.Forms.MenuItem menuItem5;
 
         #endregion
 
@@ -45,118 +43,111 @@ namespace translit
 
         #endregion
 
-        #region Constructors
+        //shadow start
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTCLIENT = 0x1;
+        private const int HTCAPTION = 0x2;
 
+        private bool m_aeroEnabled;
+
+        private const int CS_DROPSHADOW = 0x00020000;
+        private const int WM_NCPAINT = 0x0085;
+        private const int WM_ACTIVATEAPP = 0x001C;
+
+        [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+        public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+        [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+        public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+        [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+
+        public static extern int DwmIsCompositionEnabled(ref int pfEnabled);
+        [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(
+            int nLeftRect,
+            int nTopRect,
+            int nRightRect,
+            int nBottomRect,
+            int nWidthEllipse,
+            int nHeightEllipse
+            );
+
+        public struct MARGINS
+        {
+            public int leftWidth;
+            public int rightWidth;
+            public int topHeight;
+            public int bottomHeight;
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                m_aeroEnabled = CheckAeroEnabled();
+                CreateParams cp = base.CreateParams;
+                if (!m_aeroEnabled)
+                    cp.ClassStyle |= CS_DROPSHADOW; return cp;
+            }
+        }
+        private bool CheckAeroEnabled()
+        {
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                int enabled = 0; DwmIsCompositionEnabled(ref enabled);
+                return (enabled == 1) ? true : false;
+            }
+            return false;
+        }
+        //shadow end
+
+
+        #region Constructors
         public TransForm()
         {
-            CheckUpdate();
+            try
+            {
+                CheckUpdate();
+            }
+            catch
+            {
+                //pass
+            }
             InitializeComponent();
+
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+            MouseMove += OnMouseMove;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+            HookMouseMove(this.Controls);
+            //sogouWordDefWebBrowser.DocumentCompleted += sogouWordDefWebBrowser_DocumentCompleted;
+
+            m_aeroEnabled = false;
             _clipboardViewerNext = SetClipboardViewer(hWndNewViewer: this.Handle);
             //WindowState = FormWindowState.Minimized;
-            Startupballon();
+            Startupballon(tMessage);
 
             this.components = new System.ComponentModel.Container();
-            this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menuItem4.Checked = true;
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem5.Checked = true;
 
-            // Initialize contextMenu1
-            this.contextMenu1.MenuItems.AddRange(
-                        new System.Windows.Forms.MenuItem[] { this.menuItem1 });
-            this.contextMenu1.MenuItems.AddRange(
-                        new System.Windows.Forms.MenuItem[] { this.menuItem2 });
-            this.contextMenu1.MenuItems.AddRange(
-                        new System.Windows.Forms.MenuItem[] { this.menuItem3 });
-            this.contextMenu1.MenuItems.AddRange(
-                        new System.Windows.Forms.MenuItem[] { this.menuItem4 });
-            this.contextMenu1.MenuItems.AddRange(
-                        new System.Windows.Forms.MenuItem[] { this.menuItem5 });
-
-            // Initialize menuItem1
-            this.menuItem1.Index = 0;
-            this.menuItem1.Text = "E&xit";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
-
-            // Initialize menuItem2
-            this.menuItem2.Index = 1;
-            this.menuItem2.Text = "&Show";
-            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
-
-            // Initialize menuItem3
-            this.menuItem3.Index = 2;
-            this.menuItem3.Text = "&About";
-            this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
-
-            // Initialize menuItem4
-            this.menuItem4.Index = 3;
-            this.menuItem4.Text = "P&opup";
-            this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
-            this.menuItem4.Checked = true;
-
-            // Initialize menuItem5
-            this.menuItem5.Index = 3;
-            this.menuItem5.Text = "&Pronunciation";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
-            this.menuItem5.Checked = false;
 
             // The ContextMenu property sets the menu that will
             // appear when the systray icon is right clicked.
-            hiddenNotifyIcon.ContextMenu = this.contextMenu1;
+            hiddenNotifyIcon.ContextMenuStrip = this.iconContextMenu;
 
             // Handle the DoubleClick event to activate the form.
             hiddenNotifyIcon.DoubleClick += new System.EventHandler(this.hiddenNotifyIcon_DoubleClick);
+
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
         }
 
         private void hiddenNotifyIcon_DoubleClick(object Sender, EventArgs e)
         {
-            // Show the form when the user double clicks on the notify icon.
-
-            // Set the WindowState to normal if the form is minimized.
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
-
-            // Activate the form.
-            this.Activate();
-        }
-
-        private void menuItem1_Click(object Sender, EventArgs e)
-        {
-            // Close the form, which closes the application.
-            this.Close();
-        }
-
-        private void menuItem2_Click(object Sender, EventArgs e)
-        {
-            // Close the form, which closes the application.
-            this.Show();
-            WindowState = FormWindowState.Normal;
-        }
-
-        
-        private void menuItem3_Click(object Sender, EventArgs e)
-        {
-            AboutForm aboutForm = new AboutForm();
-            aboutForm.Show();
-        }
-
-        private bool TranslitActivated = true;
-        private void menuItem4_Click(object Sender, EventArgs e)
-        {
-            this.menuItem4.Checked = !this.menuItem4.Checked;
             TranslitActivated = !TranslitActivated;
+            string iconStateMsg = "复制翻译已" + (TranslitActivated ? "开启" : "关闭");
+            Startupballon(iconStateMsg);
+            this.hiddenNotifyIcon.Text = (iconStateMsg);
         }
 
-        private bool PronunciationActivated = false;
-        private void menuItem5_Click(object Sender, EventArgs e)
-        {
-            this.menuItem5.Checked = !this.menuItem5.Checked;
-            PronunciationActivated = !PronunciationActivated;
-        }
+
 
         #endregion
 
@@ -164,120 +155,266 @@ namespace translit
         [DllImport("user32", EntryPoint = "SendMessageA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int SendMessage(int hwnd, int wMsg, int wParam, int lParam);
 
-        string lastOriginalText;
+        string lastOriginalText = "";
         public long lastPostTime = 0;
+        const int wmDrawclipboard = 0x308;
+        //actually 16
+        private const int tbMarginTopBottom = 18;
+        private const int titlePanelHeightMinus1 = 29;
+
         protected override void WndProc(ref Message m)
         {
-            int testLength;
-            const int wmDrawclipboard = 0x308;
             switch (m.Msg)
             {
                 case wmDrawclipboard:
-                    if (Clipboard.ContainsText() && TranslitActivated)
+                    if (Clipboard.ContainsText() && TranslitActivated && !initialRun && !cpInTranslit && tbClipboardText.SelectedText == String.Empty && CheckTextValid(Clipboard.GetText()))
                     {
                         long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                        
+
                         if (currentTime - lastPostTime > 1000)
                         {
                             lastPostTime = currentTime;
+                            //get rid of BOM and Byte order mark: sogou misreconize English as Chinese
+                            string clipboardText = Clipboard.GetText().Trim(new char[] { '\uFEFF', '\u200B' });
+                            Console.WriteLine(System.Text.RegularExpressions.Regex.Escape(clipboardText));
 
-                            if (alwaysOnTop)
+                            if (alwaysOnTop && !tbEditing)
                             {
                                 try
                                 {
-                                    tbClipboardText.Text = GetTranslatedText(lastOriginalText + Clipboard.GetText());
+                                    if (!lastOriginalText.EndsWith("-")) lastOriginalText = lastOriginalText.Trim() + " ";
+                                    if (lastOriginalText.Trim().EndsWith(".")) lastOriginalText = lastOriginalText.Trim() + "\r\n";
+                                    tbClipboardText.Text = GetTranslatedTextAsync(lastOriginalText + clipboardText);
                                 }
-                                catch
+                                catch (WebException)
                                 {
-                                    //pass
+                                    tbClipboardText.Text = "网络连接失败，请检查您的网络设置";
+                                    lastOriginalText = "";
+                                    lastPrettifiedQueryText = "";
                                 }
-                            
-                                lastOriginalText += Clipboard.GetText();
+
+                                tbClipboardText.SelectionStart = tbClipboardText.TextLength;
+                                lastOriginalText += clipboardText;
+                                tbClipboardText.ScrollToCaret();
                             }
-                            else
+                            else if (!alwaysOnTop)
                             {
-                                try
+                                if (clipboardText == lastOriginalText)
                                 {
-                                    tbClipboardText.Text = GetTranslatedText(Clipboard.GetText());
+                                    this.Show();
+                                    WindowState = FormWindowState.Normal;
                                 }
-                                catch
+                                else
                                 {
-                                    //pass
+                                    try
+                                    {
+                                        Console.WriteLine("try to get sogou");
+                                        tbClipboardText.Text = GetTranslatedTextAsync(clipboardText);
+                                        lastOriginalText = clipboardText;
+                                        //this.wordDefWebBrowser.Navigate("https://fanyi.sogou.com/#auto/zh-CHS/test");
+                                    }
+                                    catch (WebException)
+                                    {
+                                        tbClipboardText.Text = "网络连接失败，请检查您的网络设置";
+                                        lastOriginalText = "";
+                                        lastPrettifiedQueryText = "";
+                                    }
                                 }
                             }
 
-                            tbClipboardText.Enabled = false;
-                        }
-
-                        this.Show();
-                        WindowState = FormWindowState.Normal;
-                        tbClipboardText.Enabled = true;
-
-                        testLength = tbClipboardText.TextLength;
-                        if (testLength < 10)
-                        {
-                            this.Width = (testLength + 5) * 15;
-                        }
-                        else if (testLength >= 10 && testLength < 20)
-                        {
-                            this.Width = 300;
-                        }
-                        else if (testLength >= 20 && testLength < 200)
-                        {
-                            this.Width = 400;
-                        }
-                        else if (testLength >= 200 && testLength < 300)
-                        {
-                            this.Width = 450;
-                        }
-                        else if (testLength >= 300 && testLength < 400)
-                        {
-                            this.Width = 500;
-                        }
-                        else if (testLength >= 400 && testLength < 500)
-                        {
-                            this.Width = 550;
+                            if (!tbEditing)
+                            {
+                                WidthResizer();
+                                HeightResizer();
+                            }
                         }
                         else
                         {
-                            this.Width = testLength / 8 * 7;
-                            if (this.Width > 1000)
-                            {
-                                this.Width = 1000;
-                            }
+                            //pass
                         }
-
-
-                        var numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0) + 2;
-                        this.Height = tbClipboardText.Font.Height * numberOfLines;
-
-                        this.Show();
-
                     }
                     else
                     {
                         base.WndProc(m: ref m);
                     }
-
                     break;
+
+                case WM_NCPAINT:
+                    if (m_aeroEnabled)
+                    {
+                        var v = 2;
+                        DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
+                        MARGINS margins = new MARGINS()
+                        {
+                            bottomHeight = 1,
+                            leftWidth = 1,
+                            rightWidth = 1,
+                            topHeight = 1
+                        }; DwmExtendFrameIntoClientArea(this.Handle, ref margins);
+                    }
+                    else
+                    {
+                        base.WndProc(m: ref m);
+                    }
+                    break;
+
                 default:
                     base.WndProc(m: ref m);
                     break;
+            }
+        }
+
+        //void sogouWordDefWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        //{
+        //    sogouWordDefWebBrowser.DocumentCompleted -= sogouWordDefWebBrowser_DocumentCompleted;
+        //    sogouWordDefWebBrowser.DocumentText = sogouWordDefWebBrowser.Document.GetElementById("trans-rows-3").OuterHtml;
+        //}
+
+        private Boolean CheckTextValid(String cpText)
+        {
+
+            if (Chinese2EnglishEnabled)
+            {
+                var r = new Regex(@"[a-zA-Z\u4e00-\u9fa5\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00]");
+                if (!r.IsMatch(cpText)) return false;
+            }
+            else
+            {
+                var r1 = new Regex(@"[a-zA-Z]");
+                if (!r1.IsMatch(cpText)) return false;
+                var pureEngText = Regex.Matches(cpText, @"[a-zA-Z]", RegexOptions.Multiline)
+                     .Cast<Match>().Select(c => c.Value)
+                     .Aggregate((a, b) => a + "" + b);
+                if (pureEngText.Length * 2 < cpText.Length) return false;
+            }
+
+            List<Regex> rxs = new List<Regex>(4);
+            //URL
+            rxs.Add(new Regex(@"^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~\(\)#?&//=]*)"));
+            //Email
+            rxs.Add(new Regex(@"^.+@.+$"));
+
+            foreach (var rx in rxs)
+            {
+                Boolean match = rx.IsMatch(cpText);
+                if (match)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void WidthResizer()
+        {
+            int textLength;
+            Graphics g = this.CreateGraphics();
+            SizeF sizeF = g.MeasureString(tbClipboardText.Text, tbClipboardText.Font);
+            g.Dispose();
+
+            textLength = tbClipboardText.TextLength;
+            if (textLength < 35)
+            {
+                this.Width = (int)Math.Ceiling(sizeF.Width * 1.06 + 8);
+            }
+            else if (textLength >= 35 && textLength < 200)
+            {
+                this.Width = 400;
+            }
+            else if (textLength >= 200 && textLength < 300)
+            {
+                this.Width = 450;
+            }
+            else if (textLength >= 300 && textLength < 400)
+            {
+                this.Width = 500;
+            }
+            else if (textLength >= 400 && textLength < 500)
+            {
+                this.Width = 550;
+            }
+            else
+            {
+                int tempWidth;
+                tempWidth = textLength / 8 * 7;
+                if (tempWidth > 600)
+                {
+                    this.Width = 600;
+                }
+                else
+                {
+                    this.Width = tempWidth;
+                }
+            }
+
+            //textLength >= 35
+            int numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0);
+            if (numberOfLines == 1)
+            {
+                Console.WriteLine("only one line");
+                this.Width = (int)Math.Ceiling(sizeF.Width + 20);
+            }
+
+            Console.WriteLine(tbEditing);
+            if (this.Width < 150 && !tbEditing)
+            {
+                this.miniEditNQuery.Visible = false;
+            }
+            else
+            {
+                this.miniEditNQuery.Visible = true;
+            }
+        }
+
+        private void HeightResizer()
+        {
+            int numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0);
+            //if (tbEditing) numberOfLines += 1;
+
+            if (titlePanel.Visible)
+            {
+                this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom + titlePanelHeightMinus1);
+                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.25) * numberOfLines + tbMarginTopBottom + titlePanelHeightMinus1;
+            }
+            else
+            {
+                this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom);
+                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.25) * numberOfLines + tbMarginTopBottom;
+            }
+
+
+            if (this.Height >= this.MaximumSize.Height)
+            {
+                tbClipboardText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            }
+            else
+            {
+                tbClipboardText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             }
 
         }
 
         private string SogouPhoneticUrl = "";
-        private string GetTranslatedText(string sourceText)
+        private string sogouSecret;
+        string prettyText;
+        private string lastPrettifiedQueryText = "";
+        private string lastTranslatedText = "";
+        private string GetTranslatedTextAsync(string sourceText)
         {
             using (var client = new WebClient())
             {
-                var values = new NameValueCollection();
-                string text = sourceText.Replace("\r\n", " ");
-                text.Replace("\n", " ");
-                text.Replace("\r", " ");
-                text.Replace("\\s+", " ").Trim();
+                client.Headers["User-Agent"] =
+                    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0";
 
+                prettifyQueryText(sourceText);
+                //do not repeat quering
+                if (prettyText == lastPrettifiedQueryText)
+                {
+                    return lastTranslatedText;
+                }
+                lastPrettifiedQueryText = prettyText;
+
+                var values = new NameValueCollection();
                 values["from"] = "auto";
                 values["to"] = "zh-CHS";
                 values["client"] = "pc";
@@ -289,14 +426,24 @@ namespace translit
                 values["uuid"] = Guid.NewGuid().ToString();
                 values["oxford"] = "on";
                 values["isReturnSugg"] = "on";
-                values["text"] = text;
-                values["s"] = CreateMD5("auto" + "zh-CHS" + text + "front_9ee4f0a1102eee31d09b55e4d66931fd");
+                values["text"] = prettyText;
+                if (String.IsNullOrEmpty(sogouSecret))
+                {
+                    try
+                    {
+                        CheckUpdate();
+                    }
+                    catch (WebException)
+                    {
+                        tbClipboardText.Text = "网络连接失败，请检查您的网络设置";
+                    }
+                }
+                values["s"] = CreateMD5("auto" + "zh-CHS" + prettyText + sogouSecret);
 
                 var response = client.UploadValues(Resources.SogouTranslaterUrl, "POST", values);
 
                 var responseString = Encoding.UTF8.GetString(response);
                 JObject json = JObject.Parse(responseString);
-
 
                 if (PronunciationActivated)
                 {
@@ -314,6 +461,7 @@ namespace translit
                             Regex rgx = new Regex("[^a-zA-Z -]");
                             SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
                         }
+                        Debug.WriteLine(SogouPhoneticUrl);
                     }
                     catch
                     {
@@ -330,8 +478,114 @@ namespace translit
 
                 }
 
-                return (string)json["translate"]["dit"];
+                string translatedText = (string)json["data"]["translate"]["dit"];
+                translatedText = translatedText.Trim();
+                lastTranslatedText = translatedText;
+                return translatedText;
             }
+        }
+
+
+        private void prettifyQueryText(string sourceText)
+        {
+            if (!tbEditing && !isEditedQuering)
+            {
+                prettyText = sourceText.Trim().Replace("\\s+", " ").Trim();
+                prettyText = Regex.Replace(prettyText, @"(?<!\b(to|of|at|in|by)[\s\n\r]+?|\.(\r?)\n(\s?)|^)[\[|\(][\d\W]+[\]|\)]", "");
+                string[] sourceTextLines = prettyText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+                double textLengthThreshold = Quartiles(sourceTextLines).Item1;
+
+                string[] prettyTextLines = new String[sourceTextLines.Length];
+                prettyText = "";
+                Console.WriteLine($"item1:{Quartiles(sourceTextLines).Item1},item2:{Quartiles(sourceTextLines).Item2},item3:{Quartiles(sourceTextLines).Item3}");
+                foreach (var item in sourceTextLines.Select((value, i) => new { i, value }))
+                {
+                    //Console.WriteLine($"{item.value.Substring(0, 8)}:{item.value.Length}");
+                    //Console.WriteLine(System.Text.RegularExpressions.Regex.Escape(item.value));
+                    //string trimedLine = item.value.TrimEnd((char[])"/n/r".ToCharArray());
+                    //Console.WriteLine(System.Text.RegularExpressions.Regex.Escape(item.value));
+                    if ((item.value.EndsWith(".") || item.value.EndsWith("。")) && item.i + 1 != sourceTextLines.Length && (item.value.Length < textLengthThreshold || item.value.Length > 150 ) || (sourceTextLines.Length > 1 && item.value.Length < textLengthThreshold / 2))
+                    {
+                        prettyText += item.value + "\r\n";
+                    }
+                    else
+                    {
+                        prettyText += item.value + " ";
+                    }
+                }
+                prettyText = prettyText.Replace("\\s+", " ");
+            }
+
+            if (isEditedQuering)
+            {
+                prettyText = sourceText;
+            }
+        }
+
+        private static Tuple<double, double, double> Quartiles(String[] asVal)
+        {
+            int[] afVal = asVal.Select(i => i.Length).ToArray();
+            Array.Sort(afVal);
+            int iSize = afVal.Length;
+            int iMid = iSize / 2; //this is the mid from a zero based index, eg mid of 7 = 3;
+
+            double fQ1 = 0;
+            double fQ2 = 0;
+            double fQ3 = 0;
+
+            if (iSize % 2 == 0)
+            {
+                //================ EVEN NUMBER OF POINTS: =====================
+                //even between low and high point
+                fQ2 = (afVal[iMid - 1] + afVal[iMid]) / 2;
+
+                int iMidMid = iMid / 2;
+
+                //easy split 
+                if (iMid % 2 == 0)
+                {
+                    fQ1 = (afVal[iMidMid - 1] + afVal[iMidMid]) / 2;
+                    fQ3 = (afVal[iMid + iMidMid - 1] + afVal[iMid + iMidMid]) / 2;
+                }
+                else
+                {
+                    fQ1 = afVal[iMidMid];
+                    fQ3 = afVal[iMidMid + iMid];
+                }
+            }
+            else if (iSize == 1)
+            {
+                //================= special case, sorry ================
+                fQ1 = afVal[0];
+                fQ2 = afVal[0];
+                fQ3 = afVal[0];
+            }
+            else
+            {
+                //odd number so the median is just the midpoint in the array.
+                fQ2 = afVal[iMid];
+
+                if ((iSize - 1) % 4 == 0)
+                {
+                    //======================(4n-1) POINTS =========================
+                    int n = (iSize - 1) / 4;
+                    fQ1 = (afVal[n - 1] * .25) + (afVal[n] * .75);
+                    fQ3 = (afVal[3 * n] * .75) + (afVal[3 * n + 1] * .25);
+                }
+                else if ((iSize - 3) % 4 == 0)
+                {
+                    //======================(4n-3) POINTS =========================
+                    int n = (iSize - 3) / 4;
+
+                    fQ1 = (afVal[n] * .75) + (afVal[n + 1] * .25);
+                    fQ3 = (afVal[3 * n + 1] * .25) + (afVal[3 * n + 2] * .75);
+                }
+            }
+
+            Console.WriteLine(fQ1.ToString() + "-" + fQ2.ToString() + "-" + fQ3.ToString());
+
+            return new Tuple<double, double, double>(fQ1, fQ2, fQ3);
         }
 
         private string CreateMD5(string input)
@@ -352,12 +606,14 @@ namespace translit
             }
         }
 
-        private void Startupballon()
+        private string tMessage = "复制翻译已开启\n双击我关闭";
+        private void Startupballon(string tmsg)
         {
-            this.hiddenNotifyIcon.BalloonTipText = "Copy Anywhere to Translit!";
+            this.hiddenNotifyIcon.BalloonTipText = tmsg;
             this.hiddenNotifyIcon.BalloonTipTitle = "Translit!";
             this.hiddenNotifyIcon.ShowBalloonTip(1000);
         }
+
 
         private string UserID(string secret)
         {
@@ -378,8 +634,16 @@ namespace translit
 
         private void CheckUpdate()
         {
-
-            var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+            String userID;
+            try
+            {
+                userID = UserID(Resources.Secret);
+            }
+            catch
+            {
+                userID = "ANONYMOUS";
+            }
+            var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + userID + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
 
             string responseString;
@@ -390,38 +654,212 @@ namespace translit
                     responseString = reader.ReadToEnd().Trim();
                     if (responseString == "1")
                     {
-                        var site = new ProcessStartInfo(Resources.TranslitAboutUrl);
+                        var site = new ProcessStartInfo(Resources.TranslitAboutUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
                         Process.Start(site);
+                        tMessage = CheckMessage();
                     }
                 }
             }
+            sogouSecret = CheckSalt();
         }
 
+        private string CheckSalt()
+        {
+
+            var request = WebRequest.Create(Resources.SogouSaltUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+            var response = request.GetResponse();
+
+            string responseString;
+            using (var stream = response.GetResponseStream())
+            {
+                using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
+                {
+                    responseString = reader.ReadToEnd().Trim();
+                }
+            }
+            return responseString;
+        }
+
+        private string CheckMessage()
+        {
+
+            var request = WebRequest.Create(Resources.TranslitMessageUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+            var response = request.GetResponse();
+
+            string responseString;
+            using (var stream = response.GetResponseStream())
+            {
+                using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
+                {
+                    responseString = reader.ReadToEnd().Trim();
+                }
+            }
+            return responseString;
+        }
 
         private void TransForm_Deactivate(object sender, EventArgs e)
         {
-
+            //this.ActiveControl = textBoxPanel;
+            wordsLengthUpperLimit.Visible = false;
+            tbContextMenu.Hide();
+            tbClipboardText.Select(0, 0);
             if (!alwaysOnTop)
             {
+                if (titlePanel.Visible) this.Top += titlePanelHeightMinus1;
+                titlePanel.Visible = false;
+                tableLayoutPanel.RowStyles[0].Height = 0;
+                tableLayoutPanel.RowStyles[1].Height = 2;
+                this.splitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+                //shrink to prevent flash
+                //this.Width = 30;
+                //this.Height = 30;
                 WindowState = FormWindowState.Minimized;
                 this.Hide();
             }
         }
 
+        private void TransForm_VisibleChanged(object sender, EventArgs e)
+        {
+            if (tbEditing)
+            {
+                miniEditNQuery.Image = Resources.mini_edit;
+                tbClipboardText.BackColor = System.Drawing.Color.White;
+                tbClipboardText.ReadOnly = true;
+                //this.ActiveControl = titlePanel;
+
+                //drift away if not switch to false
+                //tbEditing phase switching should be in front of tbClipboardText changing
+                tbEditing = false;
+                tbClipboardText.Text = tbBeforeEdText;
+                //WidthResizer();
+                edToolStripMenuItem.Visible = true;
+                edExitToolStripMenuItem.Visible = false;
+            }
+            //todo
+        }
+
+        private Boolean initialRun = true;
         private void TransForm_Load(object sender, EventArgs e)
         {
             //this.Height = 500;
             //this.MinimumSize = new System.Drawing.Size(62, this.Height);
+            titlePanel.Visible = false;
+            tableLayoutPanel.RowStyles[0].Height = 0;
+            tableLayoutPanel.RowStyles[1].Height = 2;
+            this.splitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            this.Top = SystemInformation.VirtualScreen.Height / 10;
+            this.Left = SystemInformation.VirtualScreen.Width / 20;
             WindowState = FormWindowState.Minimized;
             this.Hide();
+            initialRun = false;
+            this.iconContextMenu.Renderer = new MyRenderer();
+            this.tbContextMenu.Renderer = new MyRenderer();
         }
-
 
         public Boolean ready2move = false;
         public Point mouseDownPoint;
+        private void titlePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            //this.ActiveControl = titlePanel;
+            if (e.Button == MouseButtons.Left)
+            {
+                titlePanel.Cursor = Cursors.SizeAll;
+            }
+        }
+
+        private void titlePanel_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                if (this.Opacity < 1)
+                {
+                    this.Opacity += 0.15;
+                    toolTip.SetToolTip(titlePanel, "透明度：" + (1.0-this.Opacity).ToString("P0"));
+                }              
+            }
+            else
+            {
+                if (this.Opacity > 0.2)
+                {
+                    this.Opacity -= 0.08;
+                    toolTip.SetToolTip(titlePanel, "透明度：" + (1.0 - this.Opacity).ToString("P0"));
+                }
+            }
+        }
+
+        private void titlePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!ready2move)
+            {
+                mouseDownPoint = e.Location;
+            }
+
+            if (e.Button == MouseButtons.Left)
+            {
+                ready2move = true;
+                //label1.Text = String.Format("{0} :: {1}", e.X - mouseDownPoint.X, e.Y - mouseDownPoint.Y);
+                this.Left = e.X + this.Left - mouseDownPoint.X;
+                this.Top = e.Y + this.Top - mouseDownPoint.Y;
+
+                titlePanel.Cursor = Cursors.SizeAll;
+            }
+            else
+            {
+                ready2move = false;
+                titlePanel.Cursor = Cursors.Arrow;
+            }
+
+        }
+
+
+        private void titlePanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                if (titlePanel.Visible) this.Top += titlePanelHeightMinus1;
+                titlePanel.Visible = false;
+                wordsLengthUpperLimit.Visible = false;
+
+                miniClose.Image = Resources.mini_close;
+                miniPin.Image = Resources.mini_sprig;
+                this.TopMost = false;
+                alwaysOnTop = false;
+                miniHide.Visible = false;
+                tableLayoutPanel.RowStyles[0].Height = 0;
+                tableLayoutPanel.RowStyles[1].Height = 2;
+                this.splitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+                //shrink to prevent flash
+                //this.Width = 30;
+                //this.Height = 30;
+                WindowState = FormWindowState.Minimized;
+                this.Hide();
+            }
+        }
+
+        private void titlePanel_MouseEnter(object sender, EventArgs e)
+        {
+            if (!tbEditing) titlePanel.Focus();
+        }
+
+        private void titlePanel_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void titlePanel_VisibleChanged(object sender, EventArgs e)
+        {
+            if (titlePanel.Visible)
+            {
+                this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom + titlePanelHeightMinus1);
+            }
+            else
+            {
+                this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom);
+            }
+        }
+
         private void tbClipboardText_MouseMove(object sender, MouseEventArgs e)
         {
-            tbClipboardText.Cursor = Cursors.IBeam;
             if (!ready2move)
             {
                 mouseDownPoint = e.Location;
@@ -430,20 +868,798 @@ namespace translit
             if (e.Button == MouseButtons.Middle)
             {
                 ready2move = true;
-                //label1.Text = String.Format("{0} :: {1}", e.X - mouseDownPoint.X, e.Y - mouseDownPoint.Y);
                 this.Left = e.X + this.Left - mouseDownPoint.X;
                 this.Top = e.Y + this.Top - mouseDownPoint.Y;
+                Console.WriteLine($"this.Left:{this.Left}, e.X:{e.X}, mouseDownPoint.X:{mouseDownPoint.X}");
 
                 tbClipboardText.Cursor = Cursors.SizeAll;
+            }
+            else if (e.Button == MouseButtons.Left || tbEditing)
+            {
+                tbClipboardText.Cursor = Cursors.IBeam;
             }
             else
             {
                 ready2move = false;
+                tbClipboardText.Cursor = Cursors.Arrow;
             }
         }
 
+        private void tbClipboardText_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                tbClipboardText.Cursor = Cursors.SizeAll;
+            }else if (e.Button == MouseButtons.Left)
+            {
+                tbClipboardText.Cursor = Cursors.IBeam;
+            }else if (e.Button == MouseButtons.Right)
+            {
+                if (tbClipboardText.SelectionLength > 0)
+                {
+                    cpToolStripMenuItem.Visible = true;
+                }
+                else
+                {
+                    cpToolStripMenuItem.Visible = false;
+                }
+
+                //prettyText is NULL in inital
+                if (String.IsNullOrEmpty(prettyText))
+                {
+                    toolStripSeparator4.Visible = false;
+                    edToolStripMenuItem.Visible = false;
+                }
+                else
+                {
+                    if (tbEditing)
+                    {
+                        edToolStripMenuItem.Visible = false;
+                        cpSrcToolStripMenuItem.Visible = true;
+                        cpAllToolStripMenuItem.Visible = false;
+                    }
+                    else
+                    {
+                        edToolStripMenuItem.Visible = true;
+                        cpSrcToolStripMenuItem.Visible = false;
+                        cpAllToolStripMenuItem.Visible = true;
+                    }
+                }
+            }
+        }
+
+
+        private void tbClipboardText_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbClipboardText.Cursor = Cursors.Arrow;
+        }
+
+        private Boolean tbClipboardTextSelected()
+        {
+            return (tbClipboardText.SelectedText != null && tbClipboardText.SelectedText != "");
+        }
+
+        private void tbClipboardText_MouseEnter(object sender, EventArgs e)
+        {
+            this.ActiveControl = tbClipboardText;
+
+            if (!titlePanel.Visible)
+            {
+                this.SuspendLayout();
+                //should before the height change for the maximum is rely on the tilepanel visible or not
+                titlePanel.Visible = true;
+                this.Top -= titlePanelHeightMinus1;
+                this.Height += titlePanelHeightMinus1;
+                tableLayoutPanel.RowStyles[0].Height = 30;
+                tableLayoutPanel.RowStyles[1].Height = 1;
+                this.splitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
+                this.ResumeLayout();
+            }
+        }
+
+
+        private void tbClipboardText_MouseLeave(object sender, EventArgs e)
+        {
+            tbClipboardText.SelectionLength = 0;
+            this.ActiveControl = titlePanel;
+        }
+
+        //private void tbClipboardText_MouseWheel(object sender, MouseEventArgs e)
+        //{
+        //    if (e.Delta > 0)
+        //    {
+        //        if (this.Opacity < 1)
+        //        {
+        //            this.Opacity += 0.15;
+        //            toolTip.SetToolTip(tbClipboardText, "透明度：" + (1.0 - this.Opacity).ToString("P0"));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (this.Opacity > 0.2)
+        //        {
+        //            this.Opacity -= 0.08;
+        //            toolTip.SetToolTip(tbClipboardText, "透明度：" + (1.0 - this.Opacity).ToString("P0"));
+        //        }
+        //    }
+        //}
+
         //a tricky way to move the blinking curser and retain the black color
         private void tbClipboardText_EnabledChanged(object sender, EventArgs e)
+        {
+            //if (SogouPhoneticUrl.Length > 0)
+            //{
+            //    try
+            //    {
+            //        var wplayer = new WMPLib.WindowsMediaPlayer();
+            //        wplayer.URL = SogouPhoneticUrl;
+            //        SogouPhoneticUrl = "";
+            //        wplayer.controls.play();
+            //    }
+            //    catch
+            //    {
+            //        //pass
+            //    }
+            //}
+        }
+
+
+        private Boolean tbEditing = false;
+        private void tbClipboardText_TextChanged(object sender, EventArgs e)
+        {
+            //tbClipboardText.SelectionIndent = (int)(sizeF.Width / 10 * 2);
+            tbIsHide = false;
+            this.Opacity = 1;
+            if (!tbEditing)
+            {
+                //this.ActiveControl = textBoxPanel;
+
+                if (prettyText.Length > 4000)
+                {
+                    wordsLengthUpperLimit.Text = $"({prettyText.Length} / 5000)";
+                    wordsLengthUpperLimit.Visible = true;
+                }
+                WidthResizer();
+                HeightResizer();
+
+                //autoscroll after scrollbar shows up
+                //if (alwaysOnTop)
+                //{
+                //    if (tbClipboardText.ScrollBars != RichTextBoxScrollBars.None)
+                //    {
+                //        tbClipboardText.SelectionStart = tbClipboardText.Text.Length;
+                //        tbClipboardText.ScrollToCaret();
+                //    }
+                //}
+                this.Show();
+            }
+            else if (tbEditing && tbClipboardText.TextLength > 4000)
+            {
+                wordsLengthUpperLimit.Text = $"({tbClipboardText.TextLength} / 5000)";
+                wordsLengthUpperLimit.Visible = true;
+            }
+
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void tbClipboardText_SizeChanged(object sender, EventArgs e)
+        {
+        }
+
+
+        private void miniEditNQuery_MouseEnter(object sender, EventArgs e)
+        {
+            if (tbEditing)
+            {
+                miniEditNQuery.Image = Resources.mini_query_hover;
+            }
+            else
+            {
+                miniEditNQuery.Image = Resources.mini_edit_hover;
+            }
+        }
+
+        private void miniEditNQuery_MouseHover(object sender, EventArgs e)
+        {
+            if (!isEditedQuering && !isQueryFinishedFeeding)
+            {
+                if (tbEditing)
+                {
+                    toolTip.SetToolTip(miniEditNQuery, "提交翻译");
+                }
+                else
+                {
+                    toolTip.SetToolTip(miniEditNQuery, "编辑原文");
+                }
+            }
+        }
+
+
+        private void miniEditNQuery_MouseLeave(object sender, EventArgs e)
+        {
+            if (!isQueryFinishedFeeding && !isEditedQuering)
+            {
+                if (tbEditing)
+                {
+                    miniEditNQuery.Image = Resources.mini_query;
+                }
+                else
+                {
+                    miniEditNQuery.Image = Resources.mini_edit;
+                }
+            }
+        }
+
+        private Boolean isQueryFinishedFeeding = false;
+        private Boolean isEditedQuering;
+        private async void miniEditNQuery_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (tbClipboardText.ScrollBars != RichTextBoxScrollBars.None)
+            {
+                //scroll to top
+                tbClipboardText.SelectionStart = 0;
+                tbClipboardText.ScrollToCaret();
+            }
+            if (tbEditing)
+            {
+                isEditedQuering = true;
+                _ = Task.Factory.StartNew(() =>
+                {
+                    List<Image> queringLoadingImages = new List<Image>
+                    {
+                        Resources.mini_query_a,
+                        Resources.mini_query_b,
+                        Resources.mini_query_c,
+                        Resources.mini_query
+                    };
+
+                    int index = 0;
+                    while (isEditedQuering)
+                    {
+                        miniEditNQuery.Image = queringLoadingImages[index];
+                        Thread.Sleep(100);
+                        index += 1;
+                        if (index == 3) index = 0;
+
+                        //miniEditNQuery.Image = Resources.mini_query_b;
+                        //Thread.Sleep(100);
+
+                        //miniEditNQuery.Image = Resources.mini_query_c;
+                        //Thread.Sleep(100);
+
+                        //miniEditNQuery.Image = Resources.mini_query;
+                        //Thread.Sleep(100);
+                    }
+                });
+
+                lastOriginalText = tbClipboardText.Text;
+
+                //miniEditNQuery.Image = Resources.mini_edit;
+                tbClipboardText.BackColor = System.Drawing.Color.White;
+                tbClipboardText.ReadOnly = true;
+                //this.ActiveControl = titlePanel;
+                //WidthResizer();
+                edToolStripMenuItem.Visible = true;
+                edExitToolStripMenuItem.Visible = false;
+                
+                //tbEditing phase switching should be in front of tbClipboardText changing
+                tbEditing = false;
+                if (!String.IsNullOrEmpty(tbClipboardText.Text) && !String.IsNullOrWhiteSpace(tbClipboardText.Text))
+                {   
+                    try
+                    {
+                        string s = tbClipboardText.Text;
+                        tbClipboardText.Text = await Task.Run(() => GetTranslatedTextAsync(s));
+                    }
+                    catch (WebException)
+                    {
+                        tbClipboardText.Text = "网络连接失败，请检查您的网络设置";
+                    }
+                }
+                else
+                {
+                    tbClipboardText.Text = tbBeforeEdText;
+                }
+                isEditedQuering = false;
+
+                await Task.Factory.StartNew(() =>
+                {
+                    isQueryFinishedFeeding = true;
+                    miniEditNQuery.Image = Resources.mini_ok_a;
+                    Thread.Sleep(100);
+                    miniEditNQuery.Image = Resources.mini_ok_b;
+                    Thread.Sleep(50);
+                    miniEditNQuery.Image = Resources.mini_ok_c;
+                    Thread.Sleep(50);
+                    miniEditNQuery.Image = Resources.mini_ok;
+                    Thread.Sleep(800);
+                    miniEditNQuery.Image = Resources.mini_ok_y;
+                    Thread.Sleep(50);
+                    miniEditNQuery.Image = Resources.mini_ok_z;
+                    Thread.Sleep(50);
+                    if (tbEditing)
+                    {
+                        miniEditNQuery.Image = Resources.mini_query;
+                    }
+                    else
+                    {
+                        miniEditNQuery.Image = Resources.mini_edit;
+                    }
+                    isQueryFinishedFeeding = false;
+                });
+            }
+            else
+            {
+                tbBeforeEdText = tbClipboardText.Text;
+                miniEditNQuery.Image = Resources.mini_query;
+                tbClipboardText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(248)))), ((int)(((byte)(250)))));
+                tbClipboardText.ReadOnly = false;
+                //this.ActiveControl = tbClipboardText;
+                //WidthResizer();
+                edToolStripMenuItem.Visible = false;
+                edExitToolStripMenuItem.Visible = true;
+
+                //tbEditing phase switching should be in front of tbClipboardText changing for
+                //tbClipboardText_textchange event using tbeding to check if need to resize,
+                //so once miniEditNquery is clicked the tbeding is always true and textchange says no need to resize
+                tbEditing = true;
+                tbClipboardText.Text = prettyText;
+                //I prefer not to resize the width when simply swich between eding and not
+                HeightResizer();
+            }
+        }
+
+        
+
+        private Boolean tbIsHide = false;
+        private void miniHide_MouseHover(object sender, EventArgs e)
+        {
+            if (tbIsHide)
+            {
+                toolTip.SetToolTip(miniHide, "展开");
+            }
+            else
+            {
+                toolTip.SetToolTip(miniHide, "收起");
+            }
+        }
+
+
+        private void miniHide_MouseLeave(object sender, EventArgs e)
+        {
+            if (tbIsHide)
+            {
+                miniHide.Image = Resources.mini_down;
+            }
+            else
+            {
+                miniHide.Image = Resources.mini_up;
+            }
+        }
+
+        private void miniHide_MouseEnter(object sender, EventArgs e)
+        {
+            if (tbIsHide)
+            {
+                miniHide.Image = Resources.mini_down_hover;
+            }
+            else
+            {
+                miniHide.Image = Resources.mini_up_hover;
+            }
+        }
+
+        private void miniHide_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (tbIsHide)
+            {
+                miniHide.Image = Resources.mini_up;
+                HeightResizer();
+                tbIsHide = false;
+            }
+            else
+            {
+                miniHide.Image = Resources.mini_down;
+                this.Height = titlePanelHeightMinus1 + 2;
+                tbIsHide = true;
+            }
+        }
+
+        private void miniPin_MouseHover(object sender, EventArgs e)
+        {  
+            if (!alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_hover;
+                toolTip.SetToolTip(miniPin, "点击置顶（多选翻译）");
+            }
+            else if (alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_down_hover;
+                if (tbEditing)
+                {
+                    toolTip.SetToolTip(miniPin, "点击取消置顶\n编辑中，多选翻译已禁用");
+                }
+                else
+                {
+                    toolTip.SetToolTip(miniPin, "点击取消置顶\n多选翻译已开启");
+                }
+            }
+        }
+
+        private void miniPin_MouseLeave(object sender, EventArgs e)
+        {
+            if (!alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig;
+            }else if (alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_down;
+            }
+        }
+
+        private void miniPin_MouseEnter(object sender, EventArgs e)
+        {
+            if (!alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_hover;
+            }
+            else if (alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_down_hover;
+            }
+        }
+
+        private void miniPin_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (!alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_down;
+                this.TopMost = true;
+                alwaysOnTop = true;
+                miniHide.Visible = true;
+                miniHide.Image = Resources.mini_up;
+            }
+            else if (alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig;
+                this.TopMost = false;
+                alwaysOnTop = false;
+                miniHide.Visible = false;
+            }
+        }
+
+        private void miniPin_MouseDown(object sender, MouseEventArgs e)
+        {
+            //this.ActiveControl = miniPin;
+            miniPin.Image = Resources.mini_sprig_down;
+        }
+
+        private void miniPin_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_hover;
+            }
+            else if (alwaysOnTop)
+            {
+                miniPin.Image = Resources.mini_sprig_down_hover;
+            }
+        }
+
+        private void miniClose_MouseEnter(object sender, EventArgs e)
+        {
+            miniClose.Image = Resources.mini_close_hover;
+        }
+
+        private void miniClose_MouseLeave(object sender, EventArgs e)
+        {
+            miniClose.Image = Resources.mini_close;
+        }
+
+        private void miniClose_MouseHover(object sender, EventArgs e)
+        {
+            miniClose.Image = Resources.mini_close_hover;
+            toolTip.SetToolTip(miniClose, "关闭");
+        }
+
+        private void miniClose_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (titlePanel.Visible) this.Top += titlePanelHeightMinus1;
+            titlePanel.Visible = false;
+            wordsLengthUpperLimit.Visible = false;
+
+            miniClose.Image = Resources.mini_close;
+            miniPin.Image = Resources.mini_sprig;
+            this.TopMost = false;
+            alwaysOnTop = false;
+            miniHide.Visible = false;
+            tableLayoutPanel.RowStyles[0].Height = 0;
+            tableLayoutPanel.RowStyles[1].Height = 2;
+            this.splitPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            //shrink to prevent flash
+            //this.Width = 30;
+            //this.Height = 30;
+            WindowState = FormWindowState.Minimized;
+            this.Hide();
+        }
+
+        private void miniClose_MouseDown(object sender, MouseEventArgs e)
+        {
+            //this.ActiveControl = miniClose;
+        }
+
+        private void LogoPicture_MouseDown(object sender, MouseEventArgs e)
+        {
+            //this.ActiveControl = LogoPicture;
+        }
+
+        private void tbClipboardText_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        //private Size originalSize;
+        //private void textBoxPanel_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (e.X > textBoxPanel.Width - 7 && e.Y > textBoxPanel.Height - 7)
+        //    {
+        //        textBoxPanel.Cursor = Cursors.SizeNWSE;
+        //    }
+        //    else if (e.X > textBoxPanel.Width - 3 && e.Y <= textBoxPanel.Height - 7)
+        //    {
+        //        textBoxPanel.Cursor = Cursors.SizeWE;
+        //    }
+        //    else if (e.X < textBoxPanel.Width - 7 && e.Y > textBoxPanel.Height - 3 && e.X > 7)
+        //    {
+        //        textBoxPanel.Cursor = Cursors.SizeNS;
+        //    }
+        //    else if (e.X < 3 && e.Y < textBoxPanel.Height - 7)
+        //    {
+        //        textBoxPanel.Cursor = Cursors.SizeWE;
+        //    }
+        //    else if (e.X <= 7 && e.Y >= textBoxPanel.Height - 7)
+        //    {
+        //        textBoxPanel.Cursor = Cursors.SizeNESW;
+        //    }
+        //    else
+        //    {
+        //        textBoxPanel.Cursor = Cursors.Arrow;
+        //    }
+
+        //    if (!ready2move)
+        //    {
+        //        mouseDownPoint = e.Location;
+        //        originalSize = this.Size;
+        //    }
+
+        //    if (e.Button == MouseButtons.Left)
+        //    {
+        //        ready2move = true;
+        //        if (e.X >= textBoxPanel.Width - 8 && e.Y >= textBoxPanel.Height - 8)
+        //        {
+        //            this.Height = textBoxPanel.Top + e.Y;
+        //            this.Width = textBoxPanel.Left + e.X;
+        //        }
+        //        else if (e.X > textBoxPanel.Width - 8 && e.Y < textBoxPanel.Height - 8)
+        //        {
+        //            this.Width = textBoxPanel.Left + e.X;
+        //        }
+        //        else if (e.X < textBoxPanel.Width - 8 && e.Y > textBoxPanel.Height - 8 && e.X > 8)
+        //        {
+        //            this.Height = textBoxPanel.Top + e.Y;
+        //        }
+        //        else if (e.X < 8 && e.Y < textBoxPanel.Height - 8)
+        //        {
+        //            if (this.Width > this.MinimumSize.Width || e.X < textBoxPanel.Left)
+        //            {
+        //                this.Width = textBoxPanel.Right - e.X;
+        //                this.Left -= textBoxPanel.Left - e.X;
+        //            }
+        //        }
+        //        else if (e.X < 8 && e.Y >= textBoxPanel.Height - 8)
+        //        {
+        //            if (this.Width > this.MinimumSize.Width || e.X < textBoxPanel.Left)
+        //            {
+        //                this.Width = textBoxPanel.Right - e.X;
+        //                this.Left -= textBoxPanel.Left - e.X;
+        //                this.Height = textBoxPanel.Top + e.Y;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ready2move = false;
+        //    }
+        //}
+
+        private Size originalSize;
+        private Boolean ready2Resize;
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            Control ctl = sender as Control;
+            Point loc = this.PointToClient(ctl.PointToScreen(e.Location));
+
+            //Console.WriteLine($"loc.x:{loc.X},loc.y:{loc.Y},this.left:{this.Left},this.top:{this.Top},this.width:{this.Width},this.height:{this.Height},e.x:{e.X},e.y:{e.Y}");
+
+            if (loc.X > this.Width - 7 && loc.Y > this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeNWSE;
+            }
+            else if (loc.X > this.Width - 3 && loc.Y <= this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeWE;
+            }
+            else if (loc.X < this.Width - 7 && loc.Y > this.Height - 3 && loc.X > 7)
+            {
+                this.Cursor = Cursors.SizeNS;
+            }
+            else if (loc.X < 3 && loc.Y < this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeWE;
+            }
+            else if (loc.X <= 7 && loc.Y >= this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeNESW;
+            }
+            else
+            {
+                if(!ready2move) this.Cursor = Cursors.Arrow;
+            }
+
+            
+            if (e.Button == MouseButtons.Left)
+            {
+                ready2Resize = true;
+                //the commented way is too lag
+                //if (loc.X >= this.Width - 8 && loc.Y >= this.Height - 8)
+                if (resizingOrientation == 4)
+                {
+                    this.Height = loc.Y;
+                    this.Width = loc.X;
+                }
+                else if (resizingOrientation == 5)
+                {
+                    this.Width = loc.X;
+                }
+                else if (resizingOrientation == 3)
+                {
+                    this.Height = loc.Y;
+                }
+                else if (resizingOrientation == 1)
+                {
+                    if (this.Width > this.MinimumSize.Width || loc.X < 0)
+                    {
+                        this.Width -= loc.X;
+                        this.Left += loc.X;
+                    }
+                }
+                else if (resizingOrientation == 2)
+                {
+                    if (this.Width > this.MinimumSize.Width || loc.X < 0)
+                    {
+                        this.Width -= loc.X;
+                        this.Left += loc.X;
+                        this.Height = loc.Y;
+                    }
+                }
+
+                if (this.Width < 150 && !tbEditing)
+                {
+                    this.miniEditNQuery.Visible = false;
+                }
+                else
+                {
+                    this.miniEditNQuery.Visible = true;
+                }
+
+                this.ResumeLayout();
+            }
+            else
+            {
+                ready2Resize = false;
+            }
+        }
+
+        private int resizingOrientation;
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            Control ctl = sender as Control;
+            Point loc = this.PointToClient(ctl.PointToScreen(e.Location));
+
+            //orientation 
+            //  |1 0 5|
+            //  |1 0 5|
+            //  |2 3 4|
+            if (loc.X < 3 && loc.Y < this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeWE;
+                resizingOrientation = 1;
+            }
+            else if (loc.X <= 7 && loc.Y >= this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeNESW;
+                resizingOrientation = 2;
+            }
+            else if (loc.X < this.Width - 7 && loc.Y > this.Height - 3 && loc.X > 7)
+            {
+                this.Cursor = Cursors.SizeNS;
+                resizingOrientation = 3;
+            }
+            else if (loc.X > this.Width - 7 && loc.Y > this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeNWSE;
+                resizingOrientation = 4;
+            }
+            else if (loc.X > this.Width - 3 && loc.Y <= this.Height - 7)
+            {
+                this.Cursor = Cursors.SizeWE;
+                resizingOrientation = 5;
+            }
+            else
+            {
+                resizingOrientation = 0;
+            }
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            resizingOrientation = 0;
+        }
+
+        private string tbBeforeEdText;
+        private void edToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tbBeforeEdText = tbClipboardText.Text;
+
+            miniEditNQuery.Image = Resources.mini_query;
+            tbClipboardText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(248)))), ((int)(((byte)(250)))));
+            tbClipboardText.ReadOnly = false;
+            //this.ActiveControl = tbClipboardText;
+            
+            //WidthResizer();
+            edToolStripMenuItem.Visible = false;
+            edExitToolStripMenuItem.Visible = true;
+
+            //tbEditing phase switching should be in front of tbClipboardText changing
+            tbEditing = true;
+            tbClipboardText.Text = prettyText;
+        }
+
+        private void edExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            miniEditNQuery.Image = Resources.mini_edit;
+            tbClipboardText.BackColor = System.Drawing.Color.White;
+            tbClipboardText.ReadOnly = true;
+            //this.ActiveControl = titlePanel;
+
+            //WidthResizer();
+            edToolStripMenuItem.Visible = true;
+            edExitToolStripMenuItem.Visible = false;
+
+            //tbEditing phase switching should be in front of tbClipboardText changing
+            tbEditing = false;
+            tbClipboardText.Text = tbBeforeEdText;
+        }
+
+        private Boolean cpInTranslit = false;
+        private void cpAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cpInTranslit = true;
+            Clipboard.SetText(tbClipboardText.Text);
+            cpInTranslit = false;
+        }
+
+        private void cpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tbClipboardText.SelectionLength > 0)
+            {
+                cpInTranslit = true;
+                Clipboard.SetText(tbClipboardText.SelectedText);
+                cpInTranslit = false;
+            }
+        }
+
+        private void tbClipboardText_VisibleChanged(object sender, EventArgs e)
         {
             if (SogouPhoneticUrl.Length > 0)
             {
@@ -456,102 +1672,185 @@ namespace translit
                 }
                 catch
                 {
-
+                    //pass
                 }
             }
         }
 
-        private void tbClipboardText_MouseEnter(object sender, EventArgs e)
+        private bool TranslitActivated = true;
+        private void iCbonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!alwaysOnTop)
-            {
-                plusButton.Text = "+";
-            }
-            else if (alwaysOnTop)
-            {
-                plusButton.Text = "×";
-            }
-            plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
-            plusButton.ForeColor = Color.Black;
+            this.iCbonToolStripMenuItem.Checked = !this.iCbonToolStripMenuItem.Checked;
+            TranslitActivated = !TranslitActivated;
         }
 
-        private void tbClipboardText_MouseLeave(object sender, EventArgs e)
+        private bool PronunciationActivated = false;
+        private void iPnonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!alwaysOnTop)
-            {
-                plusButton.Text = "  ";
-            }
-            plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
-            plusButton.ForeColor = Color.Black;
+            this.iPnonToolStripMenuItem.Checked = !this.iPnonToolStripMenuItem.Checked;
+            PronunciationActivated = !PronunciationActivated;
         }
 
-        private void plusButton_MouseLeave(object sender, EventArgs e)
+        private bool Chinese2EnglishEnabled = false;
+        private void iCeonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!alwaysOnTop)
-            {
-                plusButton.Text = "  ";    
-            }
-            else if (alwaysOnTop)
-            {
-                plusButton.Text = "×";
-            }
-            plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
-            plusButton.ForeColor = Color.Black;
+            this.iCeonToolStripMenuItem.Checked = !this.iCeonToolStripMenuItem.Checked;
+            Chinese2EnglishEnabled = !Chinese2EnglishEnabled;
         }
 
-        private void plusButton_MouseEnter(object sender, EventArgs e)
+        private void iShowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!alwaysOnTop)
-            {
-                plusButton.Text = "+";
-            }
-            else if (alwaysOnTop)
-            {
-                plusButton.Text = "×";
-            }
-            plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
-            plusButton.ForeColor = Color.Black;
+            //this.ActiveControl = textBoxPanel;
+            this.Show();
+            WindowState = FormWindowState.Normal;
+            //var numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0);
+            //this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.25) * numberOfLines + 16;
+            WidthResizer();
+            HeightResizer();
         }
 
-        private void plusButton_MouseUp(object sender, MouseEventArgs e)
+        private void iAboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            plusButton.ForeColor = Color.Black;
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.Show();
         }
 
-        private void plusButton_MouseDown(object sender, MouseEventArgs e)
+        private void iExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            plusButton.ForeColor = Color.DimGray;
+            // Close the form, which closes the application.
+            this.Close();
         }
 
-        private void plusButton_MouseClick(object sender, MouseEventArgs e)
+        //flat contentMenuStripRender
+        public class MyColorTable : ProfessionalColorTable
         {
-            //if (plusButton.Font.Style == FontStyle.Bold)
-            if (alwaysOnTop && plusButton.Text != "+")
+            public override Color MenuItemBorder
             {
-                this.TopMost = false;
-                alwaysOnTop = false;
-                plusButton.Text = "  ";
-                plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
-                WindowState = FormWindowState.Minimized;
-                this.Hide();
+                get { return Color.WhiteSmoke; }
             }
-            //after the + clicked with mouse staying in situ and click again hoping to cancel the previous click
-            else if (alwaysOnTop && plusButton.Text == "+")
+            public override Color MenuItemSelected
             {
-                this.TopMost = false;
-                alwaysOnTop = false;
-                plusButton.Font = new Font(plusButton.Font, FontStyle.Regular);
+                get { return Color.WhiteSmoke; }
             }
-            else if (!alwaysOnTop)
+            public override Color ToolStripDropDownBackground
             {
-                lastOriginalText = "";
-                this.TopMost = true;
-                alwaysOnTop = true;
-                //plusButton.Text = "×";
-                plusButton.Font = new Font(plusButton.Font, FontStyle.Bold);
-                lastOriginalText = Clipboard.GetText();
+                get { return Color.White; }
             }
-            plusButton.ForeColor = Color.Black;
+            public override Color ImageMarginGradientBegin
+            {
+                get { return Color.White; }
+            }
+            public override Color ImageMarginGradientMiddle
+            {
+                get { return Color.White; }
+            }
+            public override Color ImageMarginGradientEnd
+            {
+                get { return Color.White; }
+            }
         }
+
+        public class MyRenderer : ToolStripProfessionalRenderer
+        {
+            public MyRenderer()
+                : base(new MyColorTable())
+            {
+            }
+            protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                var r = new Rectangle(e.ArrowRectangle.Location, e.ArrowRectangle.Size);
+                r.Inflate(-2, -6);
+                e.Graphics.DrawLines(Pens.Black, new Point[]{
+                    new Point(r.Left, r.Top),
+                    new Point(r.Right, r.Top + r.Height / 2),
+                    new Point(r.Left, r.Top + r.Height)});
+            }
+
+            protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                var r = new Rectangle(e.ImageRectangle.Location, e.ImageRectangle.Size);
+                r.Inflate(-4, -6);
+                e.Graphics.DrawLines(Pens.Black, new Point[]{
+                    new Point(r.Left, r.Bottom - r.Height /2),
+                    new Point(r.Left + r.Width /3,  r.Bottom),
+                    new Point(r.Right, r.Top)});
+            }
+        }
+        //flat contentMenuStripRender end
+
+
+        //little bit dirtty to be transparent
+        private void HookMouseMove(Control.ControlCollection ctls)
+        {
+            foreach (Control ctl in ctls)
+            {
+                ctl.MouseEnter += OnMouseEnter;
+                ctl.MouseLeave += OnMouseLeave;
+                ctl.MouseMove += OnMouseMove;
+                ctl.MouseDown += OnMouseDown;
+                ctl.MouseUp += OnMouseUp;
+                HookMouseMove(ctl.Controls);
+            }
+        }
+
+        private void OnMouseEnter(object sender, EventArgs e)
+        {
+            //enter whatever miniclose or titlepanel
+            if (tbIsHide) this.Opacity = 1;
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e)
+        {
+            try
+            {
+                string objname = ((Panel)sender).Name;
+                if (objname == "titlePanel" || objname == "splitPanel")
+                {
+                    if (tbIsHide) this.Opacity = 0.5;
+                }
+            }
+            catch { }
+        }
+
+        //private void button1_MouseClick(object sender, MouseEventArgs e)
+        //{
+        //    // Call the nextline whenever you want to execute your code
+        //    //sogouWordDefWebBrowser.Document.InvokeScript("applyChanges");
+
+        //    HtmlElement headElement = wordDefWebBrowser.Document.GetElementsByTagName("head")[0];
+        //    HtmlElement scriptElement = wordDefWebBrowser.Document.CreateElement("script");
+        //    IHTMLScriptElement domScriptElement = (IHTMLScriptElement)scriptElement.DomElement;
+        //    //$('head').append('<link rel=""stylesheet"" href=""//translit.tk/share/blue_stylesheet.css"" type=""text/css""/>');
+        //    domScriptElement.text = @"function applyChanges()
+        //                            { 
+        //                                $('link[rel=stylesheet]')[0].disabled=true;
+
+        //                                $('#header-fixed').remove(); 
+        //                                $('#goTop').remove(); 
+        //                                $('.btn-tips').remove(); 
+        //                                $('body >').hide(); 
+        //                                $('#trans-rows-3').show().appendTo('body'); 
+        //                                $('.J-dict-usual').css({'width':'100%','border-style':'none','box-shadow':'none'}); 
+        //                                var $defTitle = $('.for-oxford').clone().attr('id', 'simple-def-title');
+        //                                $('.box-to-text').prepend($defTitle);
+        //                                $('#simple-def-title span').text('单词释义');
+        //                                $('.to-text-title').remove();
+        //                                $('.box-to-text').css({'padding':'0'}); 
+        //                                $('.for-oxford').css({'padding-top':'0'});
+        //                                $('.J-dict-detail-content').css({'width':'100%'});
+        //                            }";
+        //    headElement.AppendChild(scriptElement);
+
+        //    string css = Resources.blue_stylesheet;
+
+        //    HTMLDocument CurrentDocument = (HTMLDocument)wordDefWebBrowser.Document.DomDocument;
+        //    IHTMLStyleSheet styleSheet = CurrentDocument.createStyleSheet("", 0);
+        //    styleSheet.cssText = css;
+
+        //    wordDefWebBrowser.Document.InvokeScript("applyChanges");
+        //}
     }
+
 }

@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2FE0976FFFE96A9D6571B2EEC7C6877B"
+        "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_72C22002DC493DACD45E210C61ED557D"
         "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,12 +57,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B08BF1545C0D9DB9409959BFE49F6D70"
-        "OwnerKey" = "8:_278B1C69D39F436CB7DEE39776566C8F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
         "OwnerKey" = "8:_9CBB5644228EDF353EBD060DEB8BC658"
         "MsmSig" = "8:_UNDEFINED"
@@ -82,7 +82,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B08BF1545C0D9DB9409959BFE49F6D70"
+        "OwnerKey" = "8:_2FE0976FFFE96A9D6571B2EEC7C6877B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -186,6 +186,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2FE0976FFFE96A9D6571B2EEC7C6877B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2FE0976FFFE96A9D6571B2EEC7C6877B"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_72C22002DC493DACD45E210C61ED557D"
             {
             "AssemblyRegister" = "3:1"
@@ -299,37 +330,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B08BF1545C0D9DB9409959BFE49F6D70"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_B08BF1545C0D9DB9409959BFE49F6D70"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
             {
             "SourcePath" = "8:wmp.dll"
@@ -346,7 +346,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -405,16 +405,16 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Translit! 18.11"
-        "ProductCode" = "8:{FA47D68D-9C22-4BA2-9EF2-53E498AF0755}"
-        "PackageCode" = "8:{E26D9AE9-3410-44D7-B1FB-1B4B639F487C}"
+        "ProductName" = "8:Translit! 18.12"
+        "ProductCode" = "8:{C07F85D5-15BD-4B76-BC39-BDE6DB204743}"
+        "PackageCode" = "8:{807D5C23-1451-4A58-84BA-4D55F86D93BE}"
         "UpgradeCode" = "8:{3FD929B0-D479-4D25-9B88-DADE914961D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:18.11"
+        "ProductVersion" = "8:18.12"
         "Manufacturer" = "8:Translit"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.translit.tk"
@@ -531,7 +531,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:Translit! (v18.11)"
+            "Description" = "8:Translit! (v18.12)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -545,7 +545,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:Translit! (v18.11)"
+            "Description" = "8:Translit! (v18.12)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
