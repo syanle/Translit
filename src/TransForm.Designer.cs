@@ -94,7 +94,7 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(209, 100);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(124, 68);
             this.tableLayoutPanel.TabIndex = 3;
             // 
             // titlePanel
@@ -112,7 +112,7 @@
             this.titlePanel.Margin = new System.Windows.Forms.Padding(0);
             this.titlePanel.MinimumSize = new System.Drawing.Size(0, 30);
             this.titlePanel.Name = "titlePanel";
-            this.titlePanel.Size = new System.Drawing.Size(209, 30);
+            this.titlePanel.Size = new System.Drawing.Size(124, 30);
             this.titlePanel.TabIndex = 0;
             this.titlePanel.Visible = false;
             this.titlePanel.VisibleChanged += new System.EventHandler(this.titlePanel_VisibleChanged);
@@ -137,64 +137,67 @@
             this.iExitToolStripMenuItem});
             this.iconContextMenu.Name = "iconContextMenu";
             this.iconContextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.iconContextMenu.Size = new System.Drawing.Size(135, 154);
+            this.iconContextMenu.Size = new System.Drawing.Size(181, 176);
             // 
             // iCbonToolStripMenuItem
             // 
             this.iCbonToolStripMenuItem.Checked = true;
             this.iCbonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.iCbonToolStripMenuItem.Name = "iCbonToolStripMenuItem";
-            this.iCbonToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iCbonToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F1)));
+            this.iCbonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iCbonToolStripMenuItem.Text = "剪切板翻译";
             this.iCbonToolStripMenuItem.Click += new System.EventHandler(this.iCbonToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // iPnonToolStripMenuItem
             // 
+            this.iPnonToolStripMenuItem.Checked = true;
+            this.iPnonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.iPnonToolStripMenuItem.Name = "iPnonToolStripMenuItem";
-            this.iPnonToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iPnonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iPnonToolStripMenuItem.Text = "单词发音";
             this.iPnonToolStripMenuItem.Click += new System.EventHandler(this.iPnonToolStripMenuItem_Click);
             // 
             // iCeonToolStripMenuItem
             // 
             this.iCeonToolStripMenuItem.Name = "iCeonToolStripMenuItem";
-            this.iCeonToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iCeonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iCeonToolStripMenuItem.Text = "中译英";
             this.iCeonToolStripMenuItem.Click += new System.EventHandler(this.iCeonToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // iShowToolStripMenuItem
             // 
             this.iShowToolStripMenuItem.Name = "iShowToolStripMenuItem";
-            this.iShowToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iShowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iShowToolStripMenuItem.Text = "显示界面";
             this.iShowToolStripMenuItem.Click += new System.EventHandler(this.iShowToolStripMenuItem_Click);
             // 
             // iAboutToolStripMenuItem
             // 
             this.iAboutToolStripMenuItem.Name = "iAboutToolStripMenuItem";
-            this.iAboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iAboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iAboutToolStripMenuItem.Text = "关于";
             this.iAboutToolStripMenuItem.Click += new System.EventHandler(this.iAboutToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(131, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // iExitToolStripMenuItem
             // 
             this.iExitToolStripMenuItem.Name = "iExitToolStripMenuItem";
-            this.iExitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.iExitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.iExitToolStripMenuItem.Text = "退出";
             this.iExitToolStripMenuItem.Click += new System.EventHandler(this.iExitToolStripMenuItem_Click);
             // 
@@ -203,7 +206,7 @@
             this.wordsLengthUpperLimit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.wordsLengthUpperLimit.AutoSize = true;
             this.wordsLengthUpperLimit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
-            this.wordsLengthUpperLimit.Location = new System.Drawing.Point(71, 9);
+            this.wordsLengthUpperLimit.Location = new System.Drawing.Point(29, 9);
             this.wordsLengthUpperLimit.Name = "wordsLengthUpperLimit";
             this.wordsLengthUpperLimit.Size = new System.Drawing.Size(66, 13);
             this.wordsLengthUpperLimit.TabIndex = 2;
@@ -214,7 +217,7 @@
             // miniHide
             // 
             this.miniHide.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.miniHide.Location = new System.Drawing.Point(137, 5);
+            this.miniHide.Location = new System.Drawing.Point(52, 5);
             this.miniHide.Name = "miniHide";
             this.miniHide.Size = new System.Drawing.Size(20, 20);
             this.miniHide.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -247,7 +250,7 @@
             this.miniClose.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.miniClose.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.miniClose.Image = ((System.Drawing.Image)(resources.GetObject("miniClose.Image")));
-            this.miniClose.Location = new System.Drawing.Point(190, 10);
+            this.miniClose.Location = new System.Drawing.Point(105, 10);
             this.miniClose.Name = "miniClose";
             this.miniClose.Size = new System.Drawing.Size(11, 11);
             this.miniClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -264,7 +267,7 @@
             this.miniPin.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.miniPin.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.miniPin.Image = global::pdfTranslater.Properties.Resources.mini_sprig;
-            this.miniPin.Location = new System.Drawing.Point(165, 7);
+            this.miniPin.Location = new System.Drawing.Point(80, 7);
             this.miniPin.Name = "miniPin";
             this.miniPin.Size = new System.Drawing.Size(15, 15);
             this.miniPin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -284,7 +287,7 @@
             this.splitPanel.Location = new System.Drawing.Point(0, 30);
             this.splitPanel.Margin = new System.Windows.Forms.Padding(0);
             this.splitPanel.Name = "splitPanel";
-            this.splitPanel.Size = new System.Drawing.Size(209, 2);
+            this.splitPanel.Size = new System.Drawing.Size(124, 2);
             this.splitPanel.TabIndex = 1;
             // 
             // textBoxPanel
@@ -298,7 +301,7 @@
             this.textBoxPanel.Margin = new System.Windows.Forms.Padding(0);
             this.textBoxPanel.Name = "textBoxPanel";
             this.textBoxPanel.Padding = new System.Windows.Forms.Padding(8);
-            this.textBoxPanel.Size = new System.Drawing.Size(209, 68);
+            this.textBoxPanel.Size = new System.Drawing.Size(124, 36);
             this.textBoxPanel.TabIndex = 0;
             // 
             // tbClipboardText
@@ -314,7 +317,7 @@
             this.tbClipboardText.Name = "tbClipboardText";
             this.tbClipboardText.ReadOnly = true;
             this.tbClipboardText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.tbClipboardText.Size = new System.Drawing.Size(193, 52);
+            this.tbClipboardText.Size = new System.Drawing.Size(108, 20);
             this.tbClipboardText.TabIndex = 1;
             this.tbClipboardText.TabStop = false;
             this.tbClipboardText.Text = "Translit!";
@@ -394,12 +397,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(209, 100);
+            this.ClientSize = new System.Drawing.Size(124, 68);
             this.Controls.Add(this.tableLayoutPanel);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimumSize = new System.Drawing.Size(75, 30);
             this.Name = "TransForm";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Translit!";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));

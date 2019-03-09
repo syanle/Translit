@@ -176,10 +176,10 @@
     <value>translit!</value>
   </data>
   <data name="TranslitCurrentVersion" xml:space="preserve">
-    <value>&amp;version=18.12</value>
+    <value>19.02</value>
   </data>
   <data name="TranslitAboutUrl" xml:space="preserve">
-    <value>http://www.translit.tk</value>
+    <value>http://www.translit.tk/</value>
   </data>
   <data name="mini_sprig_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mini_sprig_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -225,5 +225,11 @@
   </data>
   <data name="blue_stylesheet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\blue_stylesheet.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;gb2312</value>
+  </data>
+  <data name="translit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\translit.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="translit_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\translit_bw.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

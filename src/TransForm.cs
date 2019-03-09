@@ -22,7 +22,7 @@ namespace translit
 {
     public partial class TransForm : Form
     {
-
+        KeyboardHook hook = new KeyboardHook();
 
         #region fields
 
@@ -113,6 +113,13 @@ namespace translit
             }
             InitializeComponent();
 
+            // register the event that is fired after the key press.
+            hook.KeyPressed +=
+                new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
+            // register the control + alt + F12 combination as hot key.
+            // hook.RegisterHotKey(translit.ModifierKeys.Control | translit.ModifierKeys.Alt, Keys.F12);
+            hook.RegisterHotKey(translit.ModifierKeys.Alt, Keys.F1);
+
             MouseEnter += OnMouseEnter;
             MouseLeave += OnMouseLeave;
             MouseMove += OnMouseMove;
@@ -124,7 +131,7 @@ namespace translit
             m_aeroEnabled = false;
             _clipboardViewerNext = SetClipboardViewer(hWndNewViewer: this.Handle);
             //WindowState = FormWindowState.Minimized;
-            Startupballon(tMessage);
+            Startupballon(CheckMessage());
 
             this.components = new System.ComponentModel.Container();
 
@@ -142,12 +149,20 @@ namespace translit
         private void hiddenNotifyIcon_DoubleClick(object Sender, EventArgs e)
         {
             TranslitActivated = !TranslitActivated;
+            this.iCbonToolStripMenuItem.Checked = !this.iCbonToolStripMenuItem.Checked;
+            if (TranslitActivated) { hiddenNotifyIcon.Icon = Resources.translit; }
+            else { hiddenNotifyIcon.Icon = Resources.translit_bw; }
             string iconStateMsg = "复制翻译已" + (TranslitActivated ? "开启" : "关闭");
             Startupballon(iconStateMsg);
-            this.hiddenNotifyIcon.Text = (iconStateMsg);
+            this.hiddenNotifyIcon.Text = ("Translit! " + Resources.TranslitCurrentVersion + "\n" + iconStateMsg + "\n开关快捷键：Alt+F1");
         }
 
-
+        public void hook_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            //Set test data
+            //SendKeys.Send("^c");
+            hiddenNotifyIcon_DoubleClick((object)sender, (EventArgs)e);
+        }
 
         #endregion
 
@@ -166,6 +181,8 @@ namespace translit
         {
             switch (m.Msg)
             {
+                //TO DO: text selection trigger
+                //https://stackoverflow.com/questions/51557059/how-to-get-selected-text-of-currently-focused-window
                 case wmDrawclipboard:
                     if (Clipboard.ContainsText() && TranslitActivated && !initialRun && !cpInTranslit && tbClipboardText.SelectedText == String.Empty && CheckTextValid(Clipboard.GetText()))
                     {
@@ -226,6 +243,9 @@ namespace translit
                             {
                                 WidthResizer();
                                 HeightResizer();
+                                //scroll to top: dirty fix the weird bug of first line missing when pinned
+                                tbClipboardText.SelectionStart = 0;
+                                tbClipboardText.ScrollToCaret();
                             }
                         }
                         else
@@ -371,6 +391,7 @@ namespace translit
             int numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0);
             //if (tbEditing) numberOfLines += 1;
 
+            //restrict to 2/3 of the screen height
             if (titlePanel.Visible)
             {
                 this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom + titlePanelHeightMinus1);
@@ -447,16 +468,15 @@ namespace translit
 
                 if (PronunciationActivated)
                 {
-                    bool isHasOxford;
+                    int wordsCount = sourceText.Trim().Split().Length;
                     try
                     {
-                        isHasOxford = (bool)json["isHasOxford"];
-                        if (isHasOxford)
+                        if (wordsCount == 1)
                         {
-                            string phoneticUrl = (string)json["dictionary"]["content"][0]["phonetic"].Last()["filename"];
+                            string phoneticUrl = (string)json["data"]["common_dict"]["oxford"]["dict"].First()["content"].First()["phonetic"].First()["filename"];
                             SogouPhoneticUrl = "http:" + phoneticUrl;
                         }
-                        else if (sourceText.Trim().Split().Length <= 5)
+                        else if (wordsCount <= 5 && wordsCount > 1)
                         {
                             Regex rgx = new Regex("[^a-zA-Z -]");
                             SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
@@ -467,15 +487,18 @@ namespace translit
                     {
                         // Do Nothing
                     }
+                    //no audio fix for plural, participle etc.
                     finally
                     {
-                        if (sourceText.Trim().Split().Length <= 5)
+                        if (wordsCount <= 5 && wordsCount >= 1)
                         {
-                            Regex rgx = new Regex("[^a-zA-Z -]");
-                            SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
+                            if (string.IsNullOrEmpty(SogouPhoneticUrl))
+                            {
+                                Regex rgx = new Regex("[^a-zA-Z -]");
+                                SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
+                            }
                         }
                     }
-
                 }
 
                 string translatedText = (string)json["data"]["translate"]["dit"];
@@ -612,6 +635,7 @@ namespace translit
             this.hiddenNotifyIcon.BalloonTipText = tmsg;
             this.hiddenNotifyIcon.BalloonTipTitle = "Translit!";
             this.hiddenNotifyIcon.ShowBalloonTip(1000);
+            this.hiddenNotifyIcon.Text = ("Translit! " + Resources.TranslitCurrentVersion + "\n开关快捷键：Alt+F1");
         }
 
 
@@ -643,7 +667,7 @@ namespace translit
             {
                 userID = "ANONYMOUS";
             }
-            var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + userID + Resources.TranslitCurrentVersion);
+            var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + userID + "&version=" + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
 
             string responseString;
@@ -654,7 +678,7 @@ namespace translit
                     responseString = reader.ReadToEnd().Trim();
                     if (responseString == "1")
                     {
-                        var site = new ProcessStartInfo(Resources.TranslitAboutUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+                        var site = new ProcessStartInfo(Resources.TranslitAboutUrl + "?uuid=" + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
                         Process.Start(site);
                         tMessage = CheckMessage();
                     }
@@ -666,7 +690,7 @@ namespace translit
         private string CheckSalt()
         {
 
-            var request = WebRequest.Create(Resources.SogouSaltUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+            var request = WebRequest.Create(Resources.SogouSaltUrl + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
 
             string responseString;
@@ -683,7 +707,7 @@ namespace translit
         private string CheckMessage()
         {
 
-            var request = WebRequest.Create(Resources.TranslitMessageUrl + UserID(Resources.Secret) + Resources.TranslitCurrentVersion);
+            var request = WebRequest.Create(Resources.TranslitMessageUrl + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
 
             string responseString;
@@ -1682,9 +1706,11 @@ namespace translit
         {
             this.iCbonToolStripMenuItem.Checked = !this.iCbonToolStripMenuItem.Checked;
             TranslitActivated = !TranslitActivated;
+            if (TranslitActivated) { hiddenNotifyIcon.Icon = Resources.translit; }
+            else { hiddenNotifyIcon.Icon = Resources.translit_bw; }
         }
 
-        private bool PronunciationActivated = false;
+        private bool PronunciationActivated = true;
         private void iPnonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.iPnonToolStripMenuItem.Checked = !this.iPnonToolStripMenuItem.Checked;
@@ -1853,4 +1879,145 @@ namespace translit
         //}
     }
 
+    public sealed class KeyboardHook : IDisposable
+    {
+        // Registers a hot key with Windows.
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+        // Unregisters the hot key with Windows.
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        /// <summary>
+        /// Represents the window that is used internally to get the messages.
+        /// </summary>
+        private class Window : NativeWindow, IDisposable
+        {
+            private static int WM_HOTKEY = 0x0312;
+
+            public Window()
+            {
+                // create the handle for the window.
+                this.CreateHandle(new CreateParams());
+            }
+
+            /// <summary>
+            /// Overridden to get the notifications.
+            /// </summary>
+            /// <param name="m"></param>
+            protected override void WndProc(ref Message m)
+            {
+                base.WndProc(ref m);
+
+                // check if we got a hot key pressed.
+                if (m.Msg == WM_HOTKEY)
+                {
+                    // get the keys.
+                    Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+                    ModifierKeys modifier = (ModifierKeys)((int)m.LParam & 0xFFFF);
+
+                    // invoke the event to notify the parent.
+                    if (KeyPressed != null)
+                        KeyPressed(this, new KeyPressedEventArgs(modifier, key));
+                }
+            }
+
+            public event EventHandler<KeyPressedEventArgs> KeyPressed;
+
+            #region IDisposable Members
+
+            public void Dispose()
+            {
+                this.DestroyHandle();
+            }
+
+            #endregion
+        }
+
+        private Window _window = new Window();
+        private int _currentId;
+
+        public KeyboardHook()
+        {
+            // register the event of the inner native window.
+            _window.KeyPressed += delegate (object sender, KeyPressedEventArgs args)
+            {
+                if (KeyPressed != null)
+                    KeyPressed(this, args);
+            };
+        }
+
+        /// <summary>
+        /// Registers a hot key in the system.
+        /// </summary>
+        /// <param name="modifier">The modifiers that are associated with the hot key.</param>
+        /// <param name="key">The key itself that is associated with the hot key.</param>
+        public void RegisterHotKey(ModifierKeys modifier, Keys key)
+        {
+            // increment the counter.
+            _currentId = _currentId + 1;
+
+            // register the hot key.
+            if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
+                throw new InvalidOperationException("Couldn’t register the hot key.");
+        }
+
+        /// <summary>
+        /// A hot key has been pressed.
+        /// </summary>
+        public event EventHandler<KeyPressedEventArgs> KeyPressed;
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            // unregister all the registered hot keys.
+            for (int i = _currentId; i > 0; i--)
+            {
+                UnregisterHotKey(_window.Handle, i);
+            }
+
+            // dispose the inner native window.
+            _window.Dispose();
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Event Args for the event that is fired after the hot key has been pressed.
+    /// </summary>
+    public class KeyPressedEventArgs : EventArgs
+    {
+        private ModifierKeys _modifier;
+        private Keys _key;
+
+        internal KeyPressedEventArgs(ModifierKeys modifier, Keys key)
+        {
+            _modifier = modifier;
+            _key = key;
+        }
+
+        public ModifierKeys Modifier
+        {
+            get { return _modifier; }
+        }
+
+        public Keys Key
+        {
+            get { return _key; }
+        }
+    }
+
+    /// <summary>
+    /// The enumeration of possible modifiers.
+    /// </summary>
+    [Flags]
+    public enum ModifierKeys : uint
+    {
+        Alt = 1,
+        Control = 2,
+        Shift = 4,
+        Win = 8
+    }
 }

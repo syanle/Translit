@@ -391,6 +391,26 @@ namespace pdfTranslater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon translit {
+            get {
+                object obj = ResourceManager.GetObject("translit", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon translit_bw {
+            get {
+                object obj = ResourceManager.GetObject("translit_bw", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap translit_text_Logo {
@@ -401,7 +421,7 @@ namespace pdfTranslater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.translit.tk.
+        ///   Looks up a localized string similar to http://www.translit.tk/.
         /// </summary>
         public static string TranslitAboutUrl {
             get {
@@ -419,7 +439,7 @@ namespace pdfTranslater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;version=18.12.
+        ///   Looks up a localized string similar to 19.02.
         /// </summary>
         public static string TranslitCurrentVersion {
             get {
