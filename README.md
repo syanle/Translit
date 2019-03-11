@@ -2,7 +2,7 @@
 > Get rid of it and complete your dissertation!
 
 Translit! is a tool designed for translating your clipboard text which is super useful when reading acedemic essays 
-for you may loose your attention and missing the key point you really need to focus when dive into a unfamiliar studing field at the very beginning.
+for you may loose your attention and miss the key point you really need to focus when dive into a unfamiliar studing field at the very beginning.
 Translit! utilizes Sogou translation API which is considered to be the best practice to translate literatures for Chinese students.  
 <br/>
 ![illustration](https://raw.githubusercontent.com/syanle/Translit/master/img/illustration-min.gif)
