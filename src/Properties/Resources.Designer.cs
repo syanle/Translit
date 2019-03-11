@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace pdfTranslater.Properties {
+namespace translit.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace pdfTranslater.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("pdfTranslater.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("translit.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -87,7 +87,9 @@ namespace pdfTranslater.Properties {
         ///table {
         /// border-collapse:collapse;
         /// border-spacing:0
-        ///} [rest of string was truncated]&quot;;.
+        ///}
+        ///caption,th {
+        /// text-align: [rest of string was truncated]&quot;;.
         /// </summary>
         public static string blue_stylesheet {
             get {

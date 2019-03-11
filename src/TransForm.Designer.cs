@@ -137,7 +137,7 @@
             this.iExitToolStripMenuItem});
             this.iconContextMenu.Name = "iconContextMenu";
             this.iconContextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.iconContextMenu.Size = new System.Drawing.Size(181, 176);
+            this.iconContextMenu.Size = new System.Drawing.Size(177, 154);
             // 
             // iCbonToolStripMenuItem
             // 
@@ -145,59 +145,57 @@
             this.iCbonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.iCbonToolStripMenuItem.Name = "iCbonToolStripMenuItem";
             this.iCbonToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F1)));
-            this.iCbonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iCbonToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iCbonToolStripMenuItem.Text = "剪切板翻译";
             this.iCbonToolStripMenuItem.Click += new System.EventHandler(this.iCbonToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(173, 6);
             // 
             // iPnonToolStripMenuItem
             // 
-            this.iPnonToolStripMenuItem.Checked = true;
-            this.iPnonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.iPnonToolStripMenuItem.Name = "iPnonToolStripMenuItem";
-            this.iPnonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iPnonToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iPnonToolStripMenuItem.Text = "单词发音";
             this.iPnonToolStripMenuItem.Click += new System.EventHandler(this.iPnonToolStripMenuItem_Click);
             // 
             // iCeonToolStripMenuItem
             // 
             this.iCeonToolStripMenuItem.Name = "iCeonToolStripMenuItem";
-            this.iCeonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iCeonToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iCeonToolStripMenuItem.Text = "中译英";
             this.iCeonToolStripMenuItem.Click += new System.EventHandler(this.iCeonToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(173, 6);
             // 
             // iShowToolStripMenuItem
             // 
             this.iShowToolStripMenuItem.Name = "iShowToolStripMenuItem";
-            this.iShowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iShowToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iShowToolStripMenuItem.Text = "显示界面";
             this.iShowToolStripMenuItem.Click += new System.EventHandler(this.iShowToolStripMenuItem_Click);
             // 
             // iAboutToolStripMenuItem
             // 
             this.iAboutToolStripMenuItem.Name = "iAboutToolStripMenuItem";
-            this.iAboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iAboutToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iAboutToolStripMenuItem.Text = "关于";
             this.iAboutToolStripMenuItem.Click += new System.EventHandler(this.iAboutToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
             // 
             // iExitToolStripMenuItem
             // 
             this.iExitToolStripMenuItem.Name = "iExitToolStripMenuItem";
-            this.iExitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.iExitToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.iExitToolStripMenuItem.Text = "退出";
             this.iExitToolStripMenuItem.Click += new System.EventHandler(this.iExitToolStripMenuItem_Click);
             // 
@@ -233,7 +231,7 @@
             // 
             this.miniEditNQuery.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.miniEditNQuery.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.miniEditNQuery.Image = global::pdfTranslater.Properties.Resources.mini_edit;
+            this.miniEditNQuery.Image = global::translit.Properties.Resources.mini_edit;
             this.miniEditNQuery.Location = new System.Drawing.Point(8, 8);
             this.miniEditNQuery.Name = "miniEditNQuery";
             this.miniEditNQuery.Size = new System.Drawing.Size(15, 15);
@@ -266,7 +264,7 @@
             // 
             this.miniPin.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.miniPin.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.miniPin.Image = global::pdfTranslater.Properties.Resources.mini_sprig;
+            this.miniPin.Image = global::translit.Properties.Resources.mini_sprig;
             this.miniPin.Location = new System.Drawing.Point(80, 7);
             this.miniPin.Name = "miniPin";
             this.miniPin.Size = new System.Drawing.Size(15, 15);
@@ -311,7 +309,7 @@
             this.tbClipboardText.ContextMenuStrip = this.tbContextMenu;
             this.tbClipboardText.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tbClipboardText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbClipboardText.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbClipboardText.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tbClipboardText.Location = new System.Drawing.Point(8, 8);
             this.tbClipboardText.Margin = new System.Windows.Forms.Padding(0);
             this.tbClipboardText.Name = "tbClipboardText";

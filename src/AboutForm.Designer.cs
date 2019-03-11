@@ -83,7 +83,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::pdfTranslater.Properties.Resources.translit_text_Logo;
+            this.pictureBox2.Image = global::translit.Properties.Resources.translit_text_Logo;
             this.pictureBox2.Location = new System.Drawing.Point(19, 97);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(87, 17);

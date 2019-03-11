@@ -15,8 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using pdfTranslater.Properties;
-using mshtml;
+using translit.Properties;
 
 namespace translit
 {
@@ -143,7 +142,20 @@ namespace translit
             // Handle the DoubleClick event to activate the form.
             hiddenNotifyIcon.DoubleClick += new System.EventHandler(this.hiddenNotifyIcon_DoubleClick);
 
+            InitSettings();
+
+            //refresh?
             this.SetStyle(ControlStyles.ResizeRedraw, true);
+        }
+
+        bool PronunciationActivated = Settings.Default.PronunciationActivated;
+        bool Chinese2EnglishEnabled = Settings.Default.Chinese2EnglishEnabled;
+        string PronunciationAccent = Settings.Default.PronunciationAccent;
+
+        private void InitSettings()
+        {
+            this.iPnonToolStripMenuItem.Checked = PronunciationActivated;
+            this.iCeonToolStripMenuItem.Checked = Chinese2EnglishEnabled;
         }
 
         private void hiddenNotifyIcon_DoubleClick(object Sender, EventArgs e)
@@ -176,6 +188,7 @@ namespace translit
         //actually 16
         private const int tbMarginTopBottom = 18;
         private const int titlePanelHeightMinus1 = 29;
+        //private static ConfigIO PreferenceConfigs = new ConfigIO();
 
         protected override void WndProc(ref Message m)
         {
@@ -389,18 +402,17 @@ namespace translit
         private void HeightResizer()
         {
             int numberOfLines = SendMessage(tbClipboardText.Handle.ToInt32(), EM_GETLINECOUNT, 0, 0);
-            //if (tbEditing) numberOfLines += 1;
 
             //restrict to 2/3 of the screen height
             if (titlePanel.Visible)
             {
                 this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom + titlePanelHeightMinus1);
-                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.25) * numberOfLines + tbMarginTopBottom + titlePanelHeightMinus1;
+                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.3) * numberOfLines + tbMarginTopBottom + titlePanelHeightMinus1;
             }
             else
             {
                 this.MaximumSize = new System.Drawing.Size(801, System.Windows.Forms.SystemInformation.VirtualScreen.Height * 2 / 3 + tbMarginTopBottom);
-                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.25) * numberOfLines + tbMarginTopBottom;
+                this.Height = Convert.ToInt32(tbClipboardText.Font.Height * 1.3) * numberOfLines + tbMarginTopBottom;
             }
 
 
@@ -466,20 +478,51 @@ namespace translit
                 var responseString = Encoding.UTF8.GetString(response);
                 JObject json = JObject.Parse(responseString);
 
-                if (PronunciationActivated)
+                bool PronunciationValid = true;
+                int wordsCount = sourceText.Trim().Split().Length;
+                var PronunciationWords = sourceText.Trim().Split();
+                if (wordsCount == 1 && PronunciationWords.All(s => s.Length <= 14))
                 {
-                    int wordsCount = sourceText.Trim().Split().Length;
+                    PronunciationValid = true;
+                }
+                else if (wordsCount > 1 && PronunciationWords.All(s => s.Length <= 16) && PronunciationWords.All(s => s.All(c => Char.IsLetter(c))))
+                {
+                    PronunciationValid = true;
+                }
+                else
+                {
+                    PronunciationValid = false;
+                }
+
+                if (PronunciationActivated && PronunciationValid)
+                {
+
                     try
                     {
                         if (wordsCount == 1)
                         {
-                            string phoneticUrl = (string)json["data"]["common_dict"]["oxford"]["dict"].First()["content"].First()["phonetic"].First()["filename"];
+                            string PronunciationAccent = Settings.Default.PronunciationAccent;
+                            string phoneticUrl;
+                            var phoneticObj = json["data"]["common_dict"]["oxford"]["dict"].First()["content"].First()["phonetic"];
+                            if (PronunciationAccent == "US")
+                            {
+                                phoneticUrl = (string)phoneticObj.Last()["filename"];
+                            }
+                            else if(PronunciationAccent == "RD")
+                            {
+                                var randgen = new Random();
+                                phoneticUrl = (string)phoneticObj[randgen.Next(phoneticObj.Count())]["filename"];
+                            }else
+                            {
+                                phoneticUrl = (string)phoneticObj.First()["filename"];
+                            }
+                            
                             SogouPhoneticUrl = "http:" + phoneticUrl;
                         }
                         else if (wordsCount <= 5 && wordsCount > 1)
                         {
                             Regex rgx = new Regex("[^a-zA-Z -]");
-                            SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
+                            SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, " ");
                         }
                         Debug.WriteLine(SogouPhoneticUrl);
                     }
@@ -495,7 +538,7 @@ namespace translit
                             if (string.IsNullOrEmpty(SogouPhoneticUrl))
                             {
                                 Regex rgx = new Regex("[^a-zA-Z -]");
-                                SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, "");
+                                SogouPhoneticUrl = Resources.SogouAudioUrl + rgx.Replace(sourceText, " ");
                             }
                         }
                     }
@@ -667,6 +710,21 @@ namespace translit
             {
                 userID = "ANONYMOUS";
             }
+
+            //different network interfaces mapping to different userIDs
+            //string recordedUserID = PreferenceConfigs.ReadSetting("userID") ?? "";
+            //if (!recordedUserID.Contains(userID))
+            //{
+            //    PreferenceConfigs.WriteSetting("userID", (string.IsNullOrEmpty(recordedUserID) ? "" : (recordedUserID+",")) + userID);
+            //}
+
+            Settings.Default.userID =  Settings.Default.userID ?? new StringCollection();
+            if (!Settings.Default.userID.Contains(userID))
+            {
+                Settings.Default.userID.Add(userID);
+                Settings.Default.Save();
+            }
+
             var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + userID + "&version=" + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
 
@@ -709,6 +767,11 @@ namespace translit
 
             var request = WebRequest.Create(Resources.TranslitMessageUrl + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
             var response = request.GetResponse();
+
+            if (!response.ResponseUri.Host.Contains("translit"))
+            {
+                return "没有有效的网络连接";
+            }
 
             string responseString;
             using (var stream = response.GetResponseStream())
@@ -1710,18 +1773,25 @@ namespace translit
             else { hiddenNotifyIcon.Icon = Resources.translit_bw; }
         }
 
-        private bool PronunciationActivated = true;
+        //private bool PronunciationActivated = Convert.ToBoolean(PreferenceConfigs.ReadSetting("PronunciationActivated"));
+        //private string PronunciationAccent = PreferenceConfigs.ReadSetting("PronunciationAccent") ?? PreferenceConfigs.WriteSetting("PronunciationAccent", "US");
+
         private void iPnonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.iPnonToolStripMenuItem.Checked = !this.iPnonToolStripMenuItem.Checked;
             PronunciationActivated = !PronunciationActivated;
+            Settings.Default.PronunciationActivated = PronunciationActivated;
+            Settings.Default.Save();
         }
 
-        private bool Chinese2EnglishEnabled = false;
+
+        //private bool Chinese2EnglishEnabled = Convert.ToBoolean(PreferenceConfigs.ReadSetting("Chinese2EnglishEnabled"));
         private void iCeonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.iCeonToolStripMenuItem.Checked = !this.iCeonToolStripMenuItem.Checked;
             Chinese2EnglishEnabled = !Chinese2EnglishEnabled;
+            Settings.Default.Chinese2EnglishEnabled = Chinese2EnglishEnabled;
+            Settings.Default.Save();
         }
 
         private void iShowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2020,4 +2090,47 @@ namespace translit
         Shift = 4,
         Win = 8
     }
+
+    //FIXME: privilige issues  
+    //public class ConfigIO
+    //{
+    //    public string ReadSetting(string key)
+    //    {
+    //        try
+    //        {
+    //            var appSettings = ConfigurationManager.AppSettings;
+    //            string result = appSettings[key];
+    //            return result;
+    //        }
+    //        catch (ConfigurationErrorsException)
+    //        {
+    //            return null;
+    //        }
+    //    }
+
+    //    public string WriteSetting(string key, string value)
+    //    {
+    //        try
+    //        {
+    //            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+    //            var settings = configFile.AppSettings.Settings;
+    //            if (settings[key] == null)
+    //            {
+    //                settings.Add(key, value);
+    //            }
+    //            else
+    //            {
+    //                settings[key].Value = value;
+    //            }
+    //            configFile.Save(ConfigurationSaveMode.Modified);
+    //            ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+    //            return value;
+    //        }
+    //        catch (ConfigurationErrorsException)
+    //        {
+    //            return null;
+    //        }
+    //    }
+    //}
+
 }

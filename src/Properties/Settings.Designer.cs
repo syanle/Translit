@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace pdfTranslater.Properties {
+namespace translit.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,6 +20,53 @@ namespace pdfTranslater.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PronunciationActivated {
+            get {
+                return ((bool)(this["PronunciationActivated"]));
+            }
+            set {
+                this["PronunciationActivated"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Chinese2EnglishEnabled {
+            get {
+                return ((bool)(this["Chinese2EnglishEnabled"]));
+            }
+            set {
+                this["Chinese2EnglishEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("US")]
+        public string PronunciationAccent {
+            get {
+                return ((string)(this["PronunciationAccent"]));
+            }
+            set {
+                this["PronunciationAccent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection userID {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["userID"]));
+            }
+            set {
+                this["userID"] = value;
             }
         }
     }
