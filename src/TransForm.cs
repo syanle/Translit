@@ -460,17 +460,6 @@ namespace translit
                 values["oxford"] = "on";
                 values["isReturnSugg"] = "on";
                 values["text"] = prettyText;
-                if (String.IsNullOrEmpty(sogouSecret))
-                {
-                    try
-                    {
-                        CheckUpdate();
-                    }
-                    catch (WebException)
-                    {
-                        tbClipboardText.Text = "网络连接失败，请检查您的网络设置";
-                    }
-                }
                 values["s"] = CreateMD5("auto" + "zh-CHS" + prettyText + sogouSecret);
 
                 var response = client.UploadValues(Resources.SogouTranslaterUrl, "POST", values);
@@ -725,7 +714,7 @@ namespace translit
                 Settings.Default.Save();
             }
 
-            var request = WebRequest.Create(Resources.TranslitCheckUpdateUrl + userID + "&version=" + Resources.TranslitCurrentVersion);
+            var request = WebRequest.Create($"{Resources.TranslitCheckUpdateUrl}?userid={UserID(Resources.Secret)}&version={Resources.TranslitCurrentVersion}");
             var response = request.GetResponse();
 
             string responseString;
@@ -736,19 +725,28 @@ namespace translit
                     responseString = reader.ReadToEnd().Trim();
                     if (responseString == "1")
                     {
-                        var site = new ProcessStartInfo(Resources.TranslitAboutUrl + "?uuid=" + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
+                        var site = new ProcessStartInfo($"{Resources.TranslitAboutUrl}?userid={UserID(Resources.Secret)}&version={Resources.TranslitCurrentVersion}");
                         Process.Start(site);
                         tMessage = CheckMessage();
                     }
                 }
             }
-            sogouSecret = CheckSalt();
+
+            try
+            {
+                sogouSecret = CheckSalt();
+                Settings.Default.SogouSecret = sogouSecret;
+                Settings.Default.Save();
+            }
+            catch
+            {
+                sogouSecret = Settings.Default.SogouSecret;
+            }
         }
 
         private string CheckSalt()
         {
-
-            var request = WebRequest.Create(Resources.SogouSaltUrl + UserID(Resources.Secret) + "&version=" + Resources.TranslitCurrentVersion);
+            var request = WebRequest.Create($"{Resources.SogouSaltUrl}?userid={UserID(Resources.Secret)}&version={Resources.TranslitCurrentVersion}");
             var response = request.GetResponse();
 
             string responseString;
@@ -758,6 +756,10 @@ namespace translit
                 {
                     responseString = reader.ReadToEnd().Trim();
                 }
+            }
+            if (!response.ResponseUri.Host.Contains("translit"))
+            {
+                throw new WebException("没有有效的网络连接");
             }
             return responseString;
         }

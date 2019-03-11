@@ -375,7 +375,7 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.translit.tk/update/salt?userid=.
+        ///   Looks up a localized string similar to http://www.translit.tk/update/salt.
         /// </summary>
         public static string SogouSaltUrl {
             get {
@@ -432,7 +432,7 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.translit.tk/update/check?userid=.
+        ///   Looks up a localized string similar to http://www.translit.tk/update/check.
         /// </summary>
         public static string TranslitCheckUpdateUrl {
             get {

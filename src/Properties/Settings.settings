@@ -14,5 +14,8 @@
     <Setting Name="userID" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="SogouSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">b33bf8c58706155663d1ad5dba4192dc</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

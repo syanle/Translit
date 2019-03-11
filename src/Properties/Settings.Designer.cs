@@ -69,5 +69,17 @@ namespace translit.Properties {
                 this["userID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("b33bf8c58706155663d1ad5dba4192dc")]
+        public string SogouSecret {
+            get {
+                return ((string)(this["SogouSecret"]));
+            }
+            set {
+                this["SogouSecret"] = value;
+            }
+        }
     }
 }
