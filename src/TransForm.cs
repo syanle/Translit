@@ -174,6 +174,7 @@ namespace translit
             //Set test data
             //SendKeys.Send("^c");
             hiddenNotifyIcon_DoubleClick((object)sender, (EventArgs)e);
+            miniClose_MouseClick((object)sender, null);
         }
 
         #endregion
@@ -1911,6 +1912,7 @@ namespace translit
             }
             catch { }
         }
+
 
         //private void button1_MouseClick(object sender, MouseEventArgs e)
         //{
