@@ -435,6 +435,10 @@ namespace translit
         private string lastTranslatedText = "";
         private string GetTranslatedTextAsync(string sourceText)
         {
+            //string rtfData;
+            //rtfData = Clipboard.GetText(TextDataFormat.UnicodeText);
+            //Console.WriteLine("rtfdata" + rtfData);
+
             using (var client = new WebClient())
             {
                 client.Headers["User-Agent"] =
@@ -547,8 +551,12 @@ namespace translit
             if (!tbEditing && !isEditedQuering)
             {
                 prettyText = sourceText.Trim().Replace("\\s+", " ").Trim();
-                prettyText = Regex.Replace(prettyText, @"(?<!\b(to|of|at|in|by)[\s\n\r]+?|\.(\r?)\n(\s?)|^)[\[|\(][\d\W]+[\]|\)]", "");
+                // remove the quotation brakets
+                // caution with \W for it'll match brackets also 
+                // visualization https://www.debuggex.com/r/PKoiAw59R9z75pHa
+                prettyText = Regex.Replace(prettyText, @"(?<!\b(to|of|at|in|by)[\s\n\r]+?|\.[\s\n\r]+?|^)[\[|\(][\d\W]*\d+\s?[\]|\)]|(?<=[,.)])((\d{1,2}(\W\d{1,2})*)(?=\s\w))", "");
                 string[] sourceTextLines = prettyText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
 
                 double textLengthThreshold = Quartiles(sourceTextLines).Item1;
 
