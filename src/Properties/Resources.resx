@@ -176,7 +176,7 @@
     <value>translit!</value>
   </data>
   <data name="TranslitCurrentVersion" xml:space="preserve">
-    <value>19.02</value>
+    <value>19.10</value>
   </data>
   <data name="TranslitAboutUrl" xml:space="preserve">
     <value>http://www.translit.tk/</value>
@@ -212,7 +212,7 @@
     <value>..\Resources\mini_sprig_hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SogouTranslaterUrl" xml:space="preserve">
-    <value>https://fanyi.sogou.com/reventondc/translateV1</value>
+    <value>https://fanyi.sogou.com/reventondc/translateV2</value>
   </data>
   <data name="mini_query_a" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mini_query_a.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -231,5 +231,8 @@
   </data>
   <data name="translit_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\translit_bw.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TranslitBootCheck" xml:space="preserve">
+    <value>http://www.translit.tk/update/bootcheck</value>
   </data>
 </root>

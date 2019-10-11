@@ -130,7 +130,9 @@ namespace translit
             m_aeroEnabled = false;
             _clipboardViewerNext = SetClipboardViewer(hWndNewViewer: this.Handle);
             //WindowState = FormWindowState.Minimized;
-            Startupballon(CheckMessage());
+
+            string tMessage = BootCheck();
+            Startupballon(tMessage);
 
             this.components = new System.ComponentModel.Container();
 
@@ -441,9 +443,9 @@ namespace translit
 
             using (var client = new WebClient())
             {
-                client.Headers["User-Agent"] =
-                    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0";
-
+                client.Headers.Add(HttpRequestHeader.Cookie, Settings.Default.SogouCookie);
+                client.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36");
+                client.Headers.Set("Referer", "https://fanyi.sogou.com/");
                 prettifyQueryText(sourceText);
                 //do not repeat quering
                 if (prettyText == lastPrettifiedQueryText)
@@ -462,13 +464,12 @@ namespace translit
                 values["needQc"] = "1";
                 values["pid"] = "sogou-dict-vr";
                 values["uuid"] = Guid.NewGuid().ToString();
-                values["oxford"] = "on";
-                values["isReturnSugg"] = "on";
+                //values["oxford"] = "on";
+                //values["isReturnSugg"] = "on";
                 values["text"] = prettyText;
                 values["s"] = CreateMD5("auto" + "zh-CHS" + prettyText + sogouSecret);
 
                 var response = client.UploadValues(Resources.SogouTranslaterUrl, "POST", values);
-
                 var responseString = Encoding.UTF8.GetString(response);
                 JObject json = JObject.Parse(responseString);
 
@@ -578,12 +579,12 @@ namespace translit
                         prettyText += item.value + " ";
                     }
                 }
-                prettyText = prettyText.Replace("\\s+", " ");
+                prettyText = prettyText.Replace("\\s+", " ").Trim();
             }
 
             if (isEditedQuering)
             {
-                prettyText = sourceText;
+                prettyText = sourceText.Trim();
             }
         }
 
@@ -736,21 +737,60 @@ namespace translit
                     {
                         var site = new ProcessStartInfo($"{Resources.TranslitAboutUrl}?userid={UserID(Resources.Secret)}&version={Resources.TranslitCurrentVersion}");
                         Process.Start(site);
-                        tMessage = CheckMessage();
+                        //tMessage = CheckMessage();
                     }
                 }
             }
 
+            //try
+            //{
+            //    sogouSecret = CheckSalt();
+            //    Settings.Default.SogouSecret = sogouSecret;
+            //    Settings.Default.Save();
+            //}
+            //catch
+            //{
+            //    sogouSecret = Settings.Default.SogouSecret;
+            //}
+
+        }
+
+        private string BootCheck()
+        {
+            var request = WebRequest.Create($"{Resources.TranslitBootCheck}?userid={UserID(Resources.Secret)}&version={Resources.TranslitCurrentVersion}");
+            var response = request.GetResponse();
+
+            string responseString;
+            using (var stream = response.GetResponseStream())
+            {
+                using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
+                {
+                    responseString = reader.ReadToEnd().Trim();
+                }
+            }
+            if (!response.ResponseUri.Host.Contains("translit"))
+            {
+                throw new WebException("没有有效的网络连接");
+            }
+
+            // write sogou secret code
             try
             {
-                sogouSecret = CheckSalt();
+                JObject bootCheckJson = JObject.Parse(responseString);
+                sogouSecret = (string)bootCheckJson["secret"];
+                tMessage = (string)bootCheckJson["message"];
                 Settings.Default.SogouSecret = sogouSecret;
+                string cookie = (string)bootCheckJson["cookie"];
+                Settings.Default.SogouCookie = cookie;
                 Settings.Default.Save();
             }
             catch
             {
                 sogouSecret = Settings.Default.SogouSecret;
+                string cookie = Settings.Default.SogouCookie;
             }
+
+            return tMessage;
         }
 
         private string CheckSalt()

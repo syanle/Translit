@@ -384,7 +384,7 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/translateV1.
+        ///   Looks up a localized string similar to https://fanyi.sogou.com/reventondc/translateV2.
         /// </summary>
         public static string SogouTranslaterUrl {
             get {
@@ -432,6 +432,15 @@ namespace translit.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://www.translit.tk/update/bootcheck.
+        /// </summary>
+        public static string TranslitBootCheck {
+            get {
+                return ResourceManager.GetString("TranslitBootCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://www.translit.tk/update/check.
         /// </summary>
         public static string TranslitCheckUpdateUrl {
@@ -441,7 +450,7 @@ namespace translit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 19.02.
+        ///   Looks up a localized string similar to 19.10.
         /// </summary>
         public static string TranslitCurrentVersion {
             get {

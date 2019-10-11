@@ -27,19 +27,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_430C5E18C6256C7D802F421183F18F4E"
+        "MsmKey" = "8:_7175B7EA13B62113EB3FACDD98C79C2A"
         "OwnerKey" = "8:_FBA88F31C6D944E09655C4E087FC8991"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_53D22614EDEC03C957232B3337FE12A0"
-        "OwnerKey" = "8:_430C5E18C6256C7D802F421183F18F4E"
+        "MsmKey" = "8:_957FEC226EF791D2724B0045E38B04B4"
+        "OwnerKey" = "8:_A544101ADB49D92F34DD3A862903CD3D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_53D22614EDEC03C957232B3337FE12A0"
+        "MsmKey" = "8:_957FEC226EF791D2724B0045E38B04B4"
+        "OwnerKey" = "8:_FBA88F31C6D944E09655C4E087FC8991"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A544101ADB49D92F34DD3A862903CD3D"
         "OwnerKey" = "8:_FBA88F31C6D944E09655C4E087FC8991"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,12 +57,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F3E47F3D5F5114E1709BBCA262F99A9F"
-        "OwnerKey" = "8:_FBA88F31C6D944E09655C4E087FC8991"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FBA88F31C6D944E09655C4E087FC8991"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -64,13 +64,7 @@
         "Entry"
         {
         "MsmKey" = "8:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
-        "OwnerKey" = "8:_53D22614EDEC03C957232B3337FE12A0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_005E19655A13E8A3EEF5BE6AD13AD022"
+        "OwnerKey" = "8:_957FEC226EF791D2724B0045E38B04B4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,19 +76,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_430C5E18C6256C7D802F421183F18F4E"
+        "OwnerKey" = "8:_A544101ADB49D92F34DD3A862903CD3D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_53D22614EDEC03C957232B3337FE12A0"
+        "OwnerKey" = "8:_957FEC226EF791D2724B0045E38B04B4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F3E47F3D5F5114E1709BBCA262F99A9F"
+        "OwnerKey" = "8:_7175B7EA13B62113EB3FACDD98C79C2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_005E19655A13E8A3EEF5BE6AD13AD022"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -243,20 +243,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_430C5E18C6256C7D802F421183F18F4E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7175B7EA13B62113EB3FACDD98C79C2A"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_430C5E18C6256C7D802F421183F18F4E"
+                    "_7175B7EA13B62113EB3FACDD98C79C2A"
                     {
-                    "Name" = "8:AxInterop.WMPLib.dll"
+                    "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:AxInterop.WMPLib.dll"
+            "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
@@ -274,20 +274,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_53D22614EDEC03C957232B3337FE12A0"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_957FEC226EF791D2724B0045E38B04B4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Interop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_53D22614EDEC03C957232B3337FE12A0"
+                    "_957FEC226EF791D2724B0045E38B04B4"
                     {
                     "Name" = "8:Interop.WMPLib.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:Interop.WMPLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A544101ADB49D92F34DD3A862903CD3D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:AxInterop.WMPLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A544101ADB49D92F34DD3A862903CD3D"
+                    {
+                    "Name" = "8:AxInterop.WMPLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:AxInterop.WMPLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
@@ -323,37 +354,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F3E47F3D5F5114E1709BBCA262F99A9F"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F3E47F3D5F5114E1709BBCA262F99A9F"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FDEEE18C5FF80C66A6D144B1CC79F9E0"
@@ -431,16 +431,16 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Translit! 19.02"
-        "ProductCode" = "8:{3796CE6D-94CC-47B0-BE37-B313C2AF8B76}"
-        "PackageCode" = "8:{21850A13-C392-45C6-9056-E28FFE529E59}"
+        "ProductName" = "8:Translit! 19.10"
+        "ProductCode" = "8:{9D8D73E0-F4AF-41F2-9C60-8CC0D9BE03A0}"
+        "PackageCode" = "8:{46A0479F-3550-4C27-834E-17F2A5003F57}"
         "UpgradeCode" = "8:{3FD929B0-D479-4D25-9B88-DADE914961D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:19.02"
+        "ProductVersion" = "8:19.10"
         "Manufacturer" = "8:Translit"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.translit.tk"
@@ -571,7 +571,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:Translit! (19.02)"
+            "Description" = "8:Translit! (19.10)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -585,7 +585,7 @@
             {
             "Name" = "8:Translit!"
             "Arguments" = "8:"
-            "Description" = "8:Translit! (19.02)"
+            "Description" = "8:Translit! (19.10)"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
@@ -996,7 +996,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FBA88F31C6D944E09655C4E087FC8991"
             {
-            "SourcePath" = "8:..\\src\\obj\\Debug\\Translit!.exe"
+            "SourcePath" = "8:..\\src\\obj\\Release\\Translit!.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CD4C96E3F1824DCBA0726247240CF4BA"

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration(configuration: "")]
 [assembly: AssemblyCompany(company: "")]
 [assembly: AssemblyProduct(product: "Translit!")]
-[assembly: AssemblyCopyright(copyright: "Copyright ©  2018")]
+[assembly: AssemblyCopyright(copyright: "Copyright ©  2019")]
 [assembly: AssemblyTrademark(trademark: "")]
 [assembly: AssemblyCulture(culture: "")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номер сборки и номер редакции по умолчанию.
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(version: "19.02")]
-[assembly: AssemblyFileVersion(version: "19.02")]
+[assembly: AssemblyVersion(version: "19.10")]
+[assembly: AssemblyFileVersion(version: "19.10")]

@@ -72,13 +72,25 @@ namespace translit.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("b33bf8c58706155663d1ad5dba4192dc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8511813095152")]
         public string SogouSecret {
             get {
                 return ((string)(this["SogouSecret"]));
             }
             set {
                 this["SogouSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"SUID=55D8FB72AF67900A000000005BBB6A92; SELECTION_SWITCH=1; HISTORY_SWITCH=1; SMYUV=1545743088257814; wuid=AAGwa3OKJgAAAAqLFD02RQYAGwY=; CXID=0F46B9B8E19611E22755D23CC9098366; ssuid=6745682256; sct=23; LSTMV=410%2C22; LCLKINT=13443; ad=zkllllllll2NWXH5lllllVCfW1DlllllbRTwGkllll9lllllRllll5@@@@@@@@@@; ABTEST=0|1570572735|v17; SUV=1570572709885; SNUID=B9684BC2B0AA3B3C68816FD8B07AF98D; IPLOC=CN1100")]
+        public string SogouCookie {
+            get {
+                return ((string)(this["SogouCookie"]));
+            }
+            set {
+                this["SogouCookie"] = value;
             }
         }
     }
